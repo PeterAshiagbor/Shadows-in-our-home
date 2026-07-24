@@ -1,6 +1,7 @@
 ---
 import { config } from '../config.js';
 import { story, shots, cover } from '../content/story.js';
+import Shot from '../components/Shot.astro';
 import '../styles/global.css';
 
 const shot = (id) => shots.find((s) => s.id === id);
@@ -39,16 +40,12 @@ const bookSchema = {
     <!-- 0 · Title -->
     <section class="section section--full hero" data-act="1" id="s0">
       <div class="hero__media" data-parallax>
-        <img
-          src={shot(1).src}
-          alt={shot(1).alt}
-          fetchpriority="high"
-          decoding="async"
-        />
+        <Shot shot={shot(1)} eager />
       </div>
       <div class="hero__content">
         <h1 class="hero__title">Shadows in Our&nbsp;Home</h1>
         <p class="hero__byline">{story.title.byline} {config.author}</p>
+        <button type="button" class="hero__play" id="autoplay-btn">▶&nbsp;&nbsp;Watch the story — 3 min</button>
       </div>
       <p class="hero__cue">{story.title.scrollCue}</p>
     </section>
@@ -56,7 +53,7 @@ const bookSchema = {
     <!-- 1 · Hook line (two beats) -->
     <section class="section section--full hero hook" data-act="1" id="s1">
       <div class="hero__media hook__media">
-        <img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" data-sharpen />
+        <Shot shot={shot(2)} attrs={{ 'data-sharpen': true }} />
       </div>
       <div class="hook__lines">
         <p class="hook__line will-reveal">{story.hook.line}</p>
@@ -76,14 +73,14 @@ const bookSchema = {
         {story.ch1a.close.map((b) => <p class="will-reveal">{b.text}</p>)}
       </div>
       <figure class="figure">
-        <img src={shot(3).src} alt={shot(3).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(3)} />
       </figure>
     </section>
 
     <!-- 3 · Ch 1 scene B — the exchange (pinned, four beats, given space) -->
     <section class="hero exchange" data-act="1" id="s3" data-pin>
       <div class="hero__media exchange__media">
-        <img src={shot(4).src} alt={shot(4).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(4)} />
       </div>
       <div class="exchange__lines">
         {story.ch1b.beats.map((b, i) => (
@@ -113,7 +110,7 @@ const bookSchema = {
     <!-- 5 · Act break — Love Blossoms -->
     <section class="section section--full hero" data-act="2" id="s5">
       <div class="hero__media" data-parallax>
-        <img src={shot(5).src} alt={shot(5).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(5)} />
       </div>
       <div class="act-break__card will-reveal">
         <p class="act-break__number">{story.actTwo.number}</p>
@@ -125,15 +122,17 @@ const bookSchema = {
     <section class="section" data-act="2" id="s6">
       <div class="prose panel">
         {story.ch2.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
-        <div class="dialogue">
-          {story.ch2.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
-        </div>
+        {story.ch2.dialogue.length > 0 && (
+          <div class="dialogue">
+            {story.ch2.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
+          </div>
+        )}
       </div>
       <div class="montage" data-montage>
         <div class="montage__track">
-          <figure><img src={shot(5).src} alt={shot(5).alt} loading="lazy" decoding="async" /></figure>
-          <figure><img src={shot(6).src} alt={shot(6).alt} loading="lazy" decoding="async" /></figure>
-          <figure><img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" /></figure>
+          <figure><Shot shot={shot(5)} /></figure>
+          <figure><Shot shot={shot(6)} /></figure>
+          <figure><Shot shot={shot(2)} /></figure>
         </div>
       </div>
       <div class="prose panel">
@@ -166,13 +165,15 @@ const bookSchema = {
         <p class="kicker">{story.ch3a.kicker}</p>
         <h2 class="chapter-heading">{story.ch3a.heading}</h2>
         {story.ch3a.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
-        <div class="dialogue">
-          {story.ch3a.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
-        </div>
+        {story.ch3a.dialogue.length > 0 && (
+          <div class="dialogue">
+            {story.ch3a.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
+          </div>
+        )}
       </div>
       <figure class="figure crossfade" data-crossfade>
-        <img src={shot(7).src} alt={shot(7).alt} loading="lazy" decoding="async" />
-        <img src={shot(8).src} alt={shot(8).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(7)} />
+        <Shot shot={shot(8)} />
       </figure>
       <div class="vows" data-vows>
         <p class="vows__line will-reveal">{story.ch3a.vows.line}</p>
@@ -190,15 +191,15 @@ const bookSchema = {
         ))}
       </div>
       <figure class="figure crossfade" data-crossfade>
-        <img src={shot(9).src} alt={shot(9).alt} loading="lazy" decoding="async" />
-        <img src={shot(10).src} alt={shot(10).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(9)} />
+        <Shot shot={shot(10)} />
       </figure>
     </section>
 
     <!-- 10 · The fracture (pinned; each beat dims the scene) -->
     <section class="hero section--full fracture" data-act="4" id="s10" data-pin>
       <div class="hero__media fracture__media">
-        <img src={shot(11).src} alt={shot(11).alt} loading="lazy" decoding="async" />
+        <Shot shot={shot(11)} />
       </div>
       <div class="fracture__dim" aria-hidden="true"></div>
       <div class="fracture__content">
@@ -213,8 +214,11 @@ const bookSchema = {
       </div>
     </section>
 
-    <!-- 11 · The last line -->
+    <!-- 11 · The last line (shot 12 barely visible in the dark behind it) -->
     <section class="last-line" data-act="4" id="s11">
+      <div class="last-line__media" aria-hidden="true">
+        <Shot shot={shot(12)} />
+      </div>
       <div>
         <p class="last-line__lead will-reveal">{story.lastLine.lead}</p>
         <p class="last-line__final will-reveal"><strong>{story.lastLine.final}</strong></p>
@@ -301,6 +305,7 @@ const bookSchema = {
 
     <!-- Persistent UI -->
     <a class="sticky-cta" id="sticky-cta" href="#s12" data-event="cta_click_sticky">Get the book</a>
+    <button type="button" class="autoplay-ctl" id="autoplay-ctl" hidden>❚❚&nbsp;&nbsp;Pause</button>
 
     <div class="exit-intent" id="exit-intent" role="dialog" aria-label="Free chapter offer" aria-hidden="true">
       <button type="button" id="exit-close" aria-label="Close">×</button>

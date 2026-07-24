@@ -186,6 +186,48 @@ body:not(.js) section[data-act='4'] { background: var(--shadow); color: #e9ddcc;
   color: var(--sunlight);
   margin-top: 1.5rem;
 }
+.hero__play {
+  margin-top: 2.5rem;
+  font-family: var(--font-utility);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--page);
+  background: rgba(23, 19, 16, 0.45);
+  border: 1px solid rgba(232, 163, 61, 0.7);
+  border-radius: 999px;
+  padding: 0.85rem 1.7rem;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.hero__play:hover {
+  background: rgba(232, 163, 61, 0.25);
+  transform: translateY(-1px);
+}
+/* auto-scroll is a full-motion feature; hide it on the reduced-motion path */
+body:not(.js-full) .hero__play { display: none; }
+
+.autoplay-ctl {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 50;
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--page);
+  background: rgba(23, 19, 16, 0.65);
+  border: 1px solid rgba(232, 163, 61, 0.55);
+  border-radius: 999px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+}
+
 .hero__cue {
   position: absolute;
   bottom: 2rem;
@@ -442,7 +484,12 @@ body:not(.js) .vows__shadow,
     rgba(23, 19, 16, 0.35);
 }
 .crossfade { position: relative; }
-.crossfade img + img { position: absolute; inset: 0; opacity: 0; }
+.crossfade img + img,
+.crossfade picture + picture img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
 
 /* ---------------------------------------------------------------------------
    Section 10 — the fracture
@@ -481,6 +528,8 @@ body:not(.js) .vows__shadow,
    Section 11 — the last line
 --------------------------------------------------------------------------- */
 .last-line {
+  position: relative;
+  overflow: hidden;
   background: var(--shadow);
   color: var(--page);
   text-align: center;
@@ -490,6 +539,19 @@ body:not(.js) .vows__shadow,
   align-items: center;
   justify-content: flex-start;
   padding-top: 38svh;
+}
+.last-line > div,
+.last-line__bridge { position: relative; z-index: 1; }
+.last-line__media {
+  /* shot 12 — the family photo, barely there in the dark */
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+}
+.last-line__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .last-line__lead {
   font-size: clamp(1.3rem, 3.4vw, 2rem);

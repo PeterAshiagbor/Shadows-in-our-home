@@ -312,6 +312,109 @@ if (!reducedMotion) {
   // so re-sort before measuring or pin spacers throw every later start off.
   ScrollTrigger.sort();
   ScrollTrigger.refresh();
+
+  /* ----------------------------------------------------------------------- */
+  /* Auto-scroll — the 3-minute guided watch.                                 */
+  /* One button starts a paced scroll through the whole story; any manual     */
+  /* input (wheel, touch, keys) pauses it instantly. Pace is weighted by      */
+  /* each section's word count, with extra dwell on pinned scenes and         */
+  /* whisper interludes, and it lands on (never scrolls past) the CTA.        */
+  /* ----------------------------------------------------------------------- */
+  const playBtn = document.getElementById('autoplay-btn');
+  const ctl = document.getElementById('autoplay-ctl');
+  const TOTAL_MS = 172000;
+  const auto = { active: false, raf: 0, plan: [], seg: 0, elapsed: 0, last: 0 };
+
+  const docY = (el) => el.getBoundingClientRect().top + window.scrollY;
+
+  function buildPlan() {
+    const stopY = docY(document.getElementById('s12'));
+    const pts = [];
+    document.querySelectorAll('section').forEach((el) => {
+      const y = docY(el);
+      if (y >= stopY - 10) return;
+      const words = (el.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+      let weight = 2500 + words * 150;
+      if (el.hasAttribute('data-pin')) weight += 6000;
+      if (el.classList.contains('whisper')) weight += 3500;
+      if (el.classList.contains('last-line')) weight += 4000; // let it land
+      pts.push({ y, weight });
+    });
+    pts.sort((a, b) => a.y - b.y);
+    pts.push({ y: stopY, weight: 0 });
+    const totalWeight = pts.reduce((s, p) => s + p.weight, 0);
+    const plan = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      plan.push({
+        from: pts[i].y,
+        to: pts[i + 1].y,
+        ms: Math.max((pts[i].weight / totalWeight) * TOTAL_MS, 400),
+      });
+    }
+    return plan;
+  }
+
+  function tick(now) {
+    if (!auto.active) return;
+    const dt = Math.min(now - auto.last, 100);
+    auto.last = now;
+    auto.elapsed += dt;
+    const seg = auto.plan[auto.seg];
+    const t = Math.min(auto.elapsed / seg.ms, 1);
+    lenis.scrollTo(seg.from + (seg.to - seg.from) * t, { immediate: true });
+    if (t >= 1) {
+      auto.seg += 1;
+      auto.elapsed = 0;
+      if (auto.seg >= auto.plan.length) {
+        stopAuto(true);
+        return;
+      }
+    }
+    auto.raf = requestAnimationFrame(tick);
+  }
+
+  function startAuto() {
+    auto.plan = buildPlan();
+    const yNow = window.scrollY;
+    auto.seg = auto.plan.findIndex((s) => s.to > yNow + 10);
+    if (auto.seg === -1) return; // already at/past the CTA
+    const seg = auto.plan[auto.seg];
+    const span = seg.to - seg.from || 1;
+    auto.elapsed = Math.max(0, ((yNow - seg.from) / span) * seg.ms);
+    auto.active = true;
+    auto.last = performance.now();
+    ctl.hidden = false;
+    ctl.textContent = '❚❚  Pause';
+    track('autoplay_start');
+    auto.raf = requestAnimationFrame(tick);
+  }
+
+  function stopAuto(done) {
+    auto.active = false;
+    cancelAnimationFrame(auto.raf);
+    if (done) {
+      ctl.hidden = true;
+      track('autoplay_complete');
+    } else {
+      ctl.textContent = '▶  Resume';
+    }
+  }
+
+  playBtn?.addEventListener('click', () => { if (!auto.active) startAuto(); });
+  ctl?.addEventListener('click', () => (auto.active ? stopAuto(false) : startAuto()));
+
+  // Any manual input hands control back to the reader immediately.
+  ['wheel', 'touchstart', 'pointerdown', 'keydown'].forEach((evt) => {
+    window.addEventListener(
+      evt,
+      (e) => {
+        if (!auto.active) return;
+        if (ctl.contains(e.target) || playBtn?.contains(e.target)) return;
+        stopAuto(false);
+      },
+      { passive: true }
+    );
+  });
 } else {
   // Reduced motion: montage becomes a plain horizontally scrollable strip;
   // whispers and the vows' shadow are simply visible (no scrubbing).

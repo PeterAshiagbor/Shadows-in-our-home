@@ -1,0 +1,47 @@
+---
+// Responsive scene image. When a shot has processed picks (shot.img), render
+// AVIF/WebP/JPEG sources at 1x/2x widths — with an art-directed wide variant
+// for landscape viewports on full-bleed heroes. Falls back to the flat `src`
+// (act-tinted SVG placeholder) when no picks exist yet.
+const { shot, eager = false, attrs = {} } = Astro.props;
+const img = shot.img;
+const loading = eager ? undefined : 'lazy';
+const priority = eager ? 'high' : undefined;
+
+const srcset = (base, widths, ext) =>
+  widths.map((w) => `/assets/shots/${base}-${w}.${ext} ${w}w`).join(', ');
+---
+
+{img ? (
+  <picture>
+    {img.wideBase && ['avif', 'webp', 'jpg'].map((ext) => (
+      <source
+        media="(min-aspect-ratio: 1/1)"
+        type={ext === 'jpg' ? 'image/jpeg' : `image/${ext}`}
+        srcset={srcset(img.wideBase, img.widths, ext)}
+        sizes={img.sizes}
+      />
+    ))}
+    <source type="image/avif" srcset={srcset(img.base, img.widths, 'avif')} sizes={img.sizes} />
+    <source type="image/webp" srcset={srcset(img.base, img.widths, 'webp')} sizes={img.sizes} />
+    <img
+      src={`/assets/shots/${img.base}-${img.widths[0]}.jpg`}
+      srcset={srcset(img.base, img.widths, 'jpg')}
+      sizes={img.sizes}
+      alt={shot.alt}
+      loading={loading}
+      fetchpriority={priority}
+      decoding="async"
+      {...attrs}
+    />
+  </picture>
+) : (
+  <img
+    src={shot.src}
+    alt={shot.alt}
+    loading={loading}
+    fetchpriority={priority}
+    decoding="async"
+    {...(shot.attrs ?? {})}
+  />
+)}

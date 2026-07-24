@@ -29,6 +29,8 @@ export const story = {
   },
 
   // Section 2 — Ch 1 scene A: Zarek watching; Kwame's teasing
+  // The teaser is a ~3-minute guided experience, not a full reading: scenes
+  // are quoted (still verbatim), cut hard for pace.
   ch1a: {
     kicker: 'Chapter One',
     heading: 'The First Spark',
@@ -36,7 +38,6 @@ export const story = {
       { text: 'The sun was dipping gently behind the tall mango trees surrounding Ganada Teacher Training College, casting a warm, golden glow over the campus. Students moved about in clusters—some rushing to evening prep, others laughing loudly as they teased friends. It was an ordinary day for everyone, except for Zarek Jonathan Quaye, who felt something unusual stirring inside him.' },
       { text: 'He was leaning against the railing of the library staircase, pretending to flip through his notes, though his eyes kept drifting to the girl sitting under the flamboyant tree across the courtyard.' },
       { text: 'Her name was Keziah Richer Mensah.' },
-      { text: 'The first thing he had noticed about her—long before he admitted it to himself—was her calmness. While campus life chaotically spun around her, she carried a soft gentleness that seemed untouched by the noise of the world. Today, her hair was tied in a simple bun, a few curls escaping to touch her cheeks. She sat with a book pressed to her lap, completely absorbed.' },
     ],
     dialogue: [
       { line: '“Still looking at her?” his friend Kwame teased, nudging him with his elbow.' },
@@ -44,7 +45,6 @@ export const story = {
       { line: 'Kwame laughed. “My brother, if you look any harder, the poor girl will catch fire.”' },
     ],
     close: [
-      { text: 'He wanted to know her.' },
       { text: 'Finally, gathering a courage he didn’t know he possessed, he walked toward her.' },
     ],
   },
@@ -59,30 +59,24 @@ export const story = {
     ],
   },
 
-  // Section 4 — Ch 1 close: the conversation, her backstory, that night
+  // Section 4 — Ch 1 close: the conversation, her backstory
   ch1c: {
     blocks: [
       { text: 'They talked—slowly at first, then with surprising ease. What started as innocent questions about classes and assignments grew into a real conversation. She told him she wanted to make a difference, especially for girls who grew up without many opportunities. That day he found out that Keziah was the daughter of a single mum who raised her with money from her sales from the market and being a cleaner at an investment company.' },
       { text: 'He listened, captivated.' },
-      { text: 'As the evening breeze picked up, rustling the leaves above them, Zarek caught himself studying her face—her thoughtful eyes, her gentle voice. He had never met anyone who made the world quiet the way she did.' },
     ],
     dialogue: [
       { line: '“Can we talk again tomorrow?” he asked before he could stop himself.' },
       { line: 'Keziah looked down shyly, then back at him.' },
       { line: '“Yes,” she said. “I would like that.”' },
     ],
-    night: [
-      { text: 'That night, Zarek lay awake on his narrow hostel bed, staring at the ceiling, replaying every moment they shared. Kwame threw a pillow at him.' },
-      { text: '“You’re grinning like a thief who stole meat from the pot.”' },
-      { text: 'Zarek didn’t deny it.' },
-    ],
+    night: [],
   },
 
   // Whisper 1 — end of Chapter One, verbatim. The first time the light flickers.
   whisper1: {
     lines: [
       'What he didn’t know — what he couldn’t possibly know — was that this meeting under the flamboyant tree would be the beginning of a story filled with love, pain, choices, consequences… and a journey neither of them saw coming.',
-      'But for now, it was just two young hearts beginning to collide.',
     ],
   },
 
@@ -100,17 +94,10 @@ export const story = {
       { text: 'They both knew why he came.' },
       { text: 'It started with conversations that stretched past the prep bell, past supper, until the security guard’s torch swept across the courtyard and Keziah would laugh softly and gather her things. Then it became walks — slow, unhurried ones along the dusty path behind the administration block where the jacaranda trees lined the road like purple sentinels. Then it became something neither of them had a proper word for yet, but both of them felt.' },
     ],
-    dialogue: [
-      { line: '“You ironed your shirt,” he said one morning, eyeing Zarek from across their small kitchen.' },
-      { line: '“People iron shirts.”' },
-      { line: '“You’ve worn the same three shirts since we moved in here.” Kwame bit into his bread, eyes dancing with amusement. “Which one is it? The reading one or the walking one?”' },
-      { line: 'Zarek poured his tea in dignified silence.' },
-    ],
+    dialogue: [],
     asking: [
-      { text: 'He asked her to be his girlfriend on a Friday, in the simplest way — not with grand gestures or rehearsed speeches, but with his hands folded in front of him and a nervousness she had never seen on him before.' },
       { text: '“So I’m asking, properly. Keziah. Will you be with me?”' },
       { text: '“Yes,” she said. Simply. Completely.' },
-      { text: 'And when he smiled — that real smile that reached all the way to his eyes — she thought that she had never in her life made a better decision.' },
     ],
   },
 
@@ -138,16 +125,9 @@ export const story = {
     heading: 'The Shape of What We Become',
     blocks: [
       { text: 'After dating for 2 years, Zarek asked Keziah to marry him on a cold Friday evening in May while they were on a romantic date at the only fancy restaurant he could afford.' },
-      { text: 'There was a church ceremony on a bright Saturday morning in April, attended by family and close friends, followed by a reception in the church hall where Keziah’s aunties cooked jollof rice and fried chicken that people would talk about for months afterward.' },
-      { text: 'Keziah wore a dress she and her mother had chosen together — long fitting white gown that was simple and modest, with small pearl buttons down the back. Her mother had cried when she first put it on. Not the overwhelmed, performative crying of women who wanted to be seen crying, but the quiet, grateful kind — the kind that comes from a woman who worked three jobs and skipped meals and told her daughter you will be something, and is now standing in a small fitting room watching that promise keep itself.' },
       { text: 'Zarek watched her walk down the aisle and felt, for the first time in his adult life, that he was exactly where he was supposed to be.' },
     ],
-    dialogue: [
-      { line: 'Kwame, standing beside him as best man, leaned over and whispered, “Don’t cry in front of all these people.”' },
-      { line: '“I’m not crying,” Zarek said.' },
-      { line: '“Your eyes are doing something.”' },
-      { line: '“Eyes do things. It’s biological.”' },
-    ],
+    dialogue: [],
     vows: {
       line: 'To have and to hold. To love and to cherish. In sickness and in health.',
       shadow: [
@@ -164,13 +144,10 @@ export const story = {
       { text: 'He paced.' },
       { text: '“Mother and baby are both well,” the midwife said. “You have a daughter.”' },
       { text: 'A daughter.', quiet: true },
-      { text: 'He nodded. He said thank you. He followed the midwife inside.' },
-      { text: 'Keziah was exhausted and luminous in the way only women who have just done something extraordinary are luminous.' },
       { text: '“She’s beautiful,” Keziah said, watching his face.' },
       { text: '“She is,” he said.' },
       { text: 'And he meant that too.' },
       { text: 'But Keziah noticed — could not help but notice — what else was there. Something that moved across his face too quickly for him to catch it and put it away.' },
-      { text: 'She told herself she was tired. She told herself it was the emotion of the day, the strangeness of a new chapter. She told herself a lot of things.' },
       { text: 'She held her daughter. And she told herself that everything was going to be fine.' },
     ],
   },
@@ -227,21 +204,25 @@ export const story = {
 };
 
 // Image manifest — one entry per shot in the §4 shot list.
-// `src` currently points at act-tinted placeholders; scripts/generate-images.mjs
-// writes real Gemini renders to /assets/shots/ and these paths swap to them.
+// `src` is the act-tinted placeholder fallback; `img` describes the processed
+// Gemini renders in /assets/shots/ (see scripts/process-picks.mjs). Heroes
+// carry an art-directed 16:9 variant served on landscape viewports.
+const HERO = { widths: [828, 1440], sizes: '100vw' };
+const INLINE = { widths: [640, 1080], sizes: '(max-width: 640px) 92vw, 544px' };
+
 export const shots = [
-  { id: 1,  act: 1, src: '/assets/shots/shot-01.svg', wide: '/assets/shots/shot-01-wide.svg', alt: 'A teacher-training college campus at golden hour, mango trees glowing, students gathered in loose clusters.' },
-  { id: 2,  act: 1, src: '/assets/shots/shot-02.svg', alt: 'Keziah sitting under the flamboyant tree, a book open in her lap, red blossoms overhead.' },
-  { id: 3,  act: 1, src: '/assets/shots/shot-03.svg', alt: 'Zarek on the library staircase, holding a book he is not reading, looking across the courtyard.' },
-  { id: 4,  act: 1, src: '/assets/shots/shot-04.svg', alt: 'Zarek and Keziah talking on a bench as dusk begins, the light still warm.' },
-  { id: 5,  act: 2, src: '/assets/shots/shot-05.svg', wide: '/assets/shots/shot-05-wide.svg', alt: 'Two silhouettes walking the campus road at evening, a security guard’s torchlight sweeping past.' },
-  { id: 6,  act: 2, src: '/assets/shots/shot-06.svg', alt: 'The flamboyant tree and an empty bench, fallen red blossoms scattered like confetti.' },
-  { id: 7,  act: 3, src: '/assets/shots/shot-07.svg', alt: 'A small, modest restaurant by candlelight — the proposal.' },
-  { id: 8,  act: 3, src: '/assets/shots/shot-08.svg', alt: 'A joyful, sunlit wedding in Ghanaian dress.' },
-  { id: 9,  act: 3, src: '/assets/shots/shot-09.svg', alt: 'Keziah, pregnant, standing at a window in soft light.' },
-  { id: 10, act: 3, src: '/assets/shots/shot-10.svg', alt: 'Zarek holding baby Victoria — careful and correct, his face partly in shadow.' },
-  { id: 11, act: 4, src: '/assets/shots/shot-11.svg', alt: 'Keziah watching Zarek and Victoria from a doorway, lamplit, a long shadow across the floor.' },
-  { id: 12, act: 4, src: '/assets/shots/shot-12.svg', wide: '/assets/shots/shot-12-wide.svg', alt: 'A family photo on a wall in near-darkness, one figure’s face fallen into shadow.' },
+  { id: 1,  act: 1, src: '/assets/shots/shot-01.svg', img: { base: 'shot-01', wideBase: 'shot-01-16x9', ...HERO }, alt: 'A teacher-training college campus at golden hour, mango trees glowing, students gathered in loose clusters.' },
+  { id: 2,  act: 1, src: '/assets/shots/shot-02.svg', img: { base: 'shot-02', ...INLINE }, alt: 'Keziah sitting under the flamboyant tree, a book open in her lap, red blossoms overhead.' },
+  { id: 3,  act: 1, src: '/assets/shots/shot-03.svg', img: { base: 'shot-03', ...INLINE }, alt: 'Zarek on the library staircase, holding a book he is not reading, looking across the courtyard.' },
+  { id: 4,  act: 1, src: '/assets/shots/shot-04.svg', img: { base: 'shot-04', ...INLINE }, alt: 'Zarek and Keziah talking on a bench as dusk begins, the light still warm.' },
+  { id: 5,  act: 2, src: '/assets/shots/shot-05.svg', img: { base: 'shot-05', wideBase: 'shot-05-16x9', ...HERO }, alt: 'Two silhouettes walking the campus road at evening, a security guard’s torchlight sweeping past.' },
+  { id: 6,  act: 2, src: '/assets/shots/shot-06.svg', img: { base: 'shot-06', ...INLINE }, alt: 'The flamboyant tree and an empty bench, fallen red blossoms scattered like confetti.' },
+  { id: 7,  act: 3, src: '/assets/shots/shot-07.svg', img: { base: 'shot-07', ...INLINE }, alt: 'A small, modest restaurant by candlelight — the proposal.' },
+  { id: 8,  act: 3, src: '/assets/shots/shot-08.svg', img: { base: 'shot-08', ...INLINE }, alt: 'A joyful, sunlit wedding in Ghanaian dress.' },
+  { id: 9,  act: 3, src: '/assets/shots/shot-09.svg', img: { base: 'shot-09', ...INLINE }, alt: 'Keziah, pregnant, standing at a window in soft light.' },
+  { id: 10, act: 3, src: '/assets/shots/shot-10.svg', img: { base: 'shot-10', ...INLINE }, alt: 'Zarek holding baby Victoria — careful and correct, his face partly in shadow.' },
+  { id: 11, act: 4, src: '/assets/shots/shot-11.svg', img: { base: 'shot-11', wideBase: 'shot-11-16x9', ...HERO }, alt: 'Keziah watching Zarek and Victoria from a doorway, lamplit, a long shadow across the floor.' },
+  { id: 12, act: 4, src: '/assets/shots/shot-12.svg', img: { base: 'shot-12', wideBase: 'shot-12-16x9', ...HERO }, alt: 'A family photo on a wall in near-darkness, one figure’s face fallen into shadow.' },
 ];
 
 // Real cover art (extracted from the manuscript file; the manuscript itself is
