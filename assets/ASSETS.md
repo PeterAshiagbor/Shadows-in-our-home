@@ -4,9 +4,10 @@ All imagery is Gemini-generated **at build time only** (no runtime API calls).
 This file is the single source of truth for prompts, seeds and chosen outputs so
 every scene can be regenerated consistently (§4 of the build spec).
 
-**Status:** ⚠️ Not yet generated — no `GEMINI_API_KEY` was available in the build
-environment. Run `GEMINI_API_KEY=... npm run generate:images`, review the
-candidates in `assets/candidates/`, promote the picks, and record seeds below.
+**Status:** ✅ Generated 2026-07-24 with `gemini-3-pro-image` (2K, character-sheet
+reference conditioning). Candidates live in `assets/candidates/` (gitignored,
+regenerable); chosen picks in `assets/picks/` (committed); web-ready exports in
+`public/assets/shots/` via `scripts/process-picks.mjs`.
 
 ---
 
@@ -102,13 +103,28 @@ image extracted from the manuscript docx (`word/media/image1.png`).
 
 ---
 
-## 4. Generation log (fill in as picks are made)
+## 4. Generation log (2026-07-24, model `gemini-3-pro-image`, 2 candidates/scene)
 
-| Shot | Model | Seed/ID | Candidates | Chosen file | Notes |
-|---|---|---|---|---|---|
-| Zarek sheet | — | — | — | — | pending |
-| Keziah sheet | — | — | — | — | pending |
-| 1–12 | — | — | — | — | pending |
+| Shot | Chosen candidate | Notes |
+|---|---|---|
+| Zarek sheet | candidate-2 | 3-view sheet; committed as picks/zarek-sheet.png |
+| Keziah sheet | candidate-1 | high bun + escaping curls per manuscript |
+| 01 (9:16) | candidate-2 | candidate-1 came out rotated sideways |
+| 01 (16:9) | candidate-1 | anonymous clusters, sun through mango trees |
+| 02 | candidate-1 | Keziah on bench, book in lap, blossoms |
+| 03 | candidate-1 | Zarek on staircase looking down toward her |
+| 04 | candidate-2 | warmer, more intimate bench conversation |
+| 05 (9:16) | candidate-1 | torch beam cutting across mid-frame |
+| 05 (16:9) | candidate-2 | wider silhouettes, sweeping beam |
+| 06 | candidate-1 | fallen-blossom carpet, long shadows |
+| 07 | candidate-2 | baked-in letterbox bars trimmed (sharp .trim) |
+| 08 | candidate-2 | kente bride + groom, brightest frame |
+| 09 | candidate-1 | letterbox trimmed; Keziah alone at window |
+| 10 | candidate-1 | face half-shadowed — carries the foreshadow |
+| 11 (4:5) | candidate-1 | doorway, long shadow, lamplit room beyond |
+| 11 (16:9) | candidate-2 | silhouette watching Zarek hold the baby |
+| 12 (9:16) | candidate-1 | framed portrait, one face lit, one in dark |
+| 12 (16:9) | candidate-1 | only candidate generated before batch end |
 
 ---
 

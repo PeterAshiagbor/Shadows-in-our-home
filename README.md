@@ -50,13 +50,18 @@ essence of where the story goes, using only material from Chapters 1–3:
 
 Never reveal on the page: the affair, Brielle, or the ending (spec §2).
 
-## ⚠️ Before launch — one hard blocker
+## Imagery
 
-**Imagery.** No `GEMINI_API_KEY` was available, so the page runs on
-act-tinted placeholder gradients. Follow `assets/ASSETS.md`: generate the
-two character sheets, lock style, generate the 12-shot list, review
-candidates, export web-ready files and update the `shots` manifest in
-`src/content/story.js`.
+All 12 scenes + character sheets are generated (`gemini-3-pro-image`, 2K,
+reference-conditioned for face consistency) and exported as responsive
+AVIF/WebP/JPEG sets — see the generation log in `assets/ASSETS.md`.
+Regenerate any scene with `GEMINI_API_KEY=... npm run generate:images -- --only <id>`,
+promote a pick into `assets/picks/`, then `node scripts/process-picks.mjs`.
+
+Interactive layers beyond the scroll: a 3-minute weighted auto-scroll
+("Watch the story"), ambient flamboyant petals on a fixed canvas that thin
+and vanish as the daylight falls, and Keziah's File — one entry open
+(Chapter Three), five sealed rows that refuse politely when tapped.
 
 ## Open items (spec §9) — all live in `src/config.js`
 

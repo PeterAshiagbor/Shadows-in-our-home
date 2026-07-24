@@ -226,6 +226,32 @@ const bookSchema = {
       <p class="last-line__bridge" data-bridge>{story.lastLine.bridge.text}</p>
     </section>
 
+    <!-- 11b · Keziah's File — one entry open, the rest sealed -->
+    <section class="section file" data-act="4" id="s11b">
+      <div class="file__inner">
+        <p class="kicker">{story.file.kicker}</p>
+        <h2 class="chapter-heading file__heading will-reveal">{story.file.heading}</h2>
+        <div class="file__card will-reveal">
+          <div class="file__meta">
+            <span>{story.file.entry.label}</span>
+            <span>{story.file.entry.chapter}</span>
+          </div>
+          <blockquote>“{story.file.entry.quote}”</blockquote>
+        </div>
+        <ul class="file__sealed" aria-label="Sealed entries — revealed in the full book">
+          {story.file.sealed.map((num) => (
+            <li class="file__row" data-sealed tabindex="0" role="button" aria-label={`Entry ${num} — sealed. The book opens it.`}>
+              <span class="file__num">Entry {num}</span>
+              <span class="remaining__smudge"></span>
+              <span class="file__lock" aria-hidden="true">✕</span>
+            </li>
+          ))}
+        </ul>
+        <p class="file__caption" id="file-caption" role="status" aria-live="polite" data-text={story.file.sealedCaption}></p>
+        <p class="file__note will-reveal">{story.file.note}</p>
+      </div>
+    </section>
+
     <!-- 12 · Conversion -->
     <section class="cta" data-act="4" id="s12">
       <div class="cta__inner">

@@ -176,6 +176,24 @@ export const story = {
     bridge: { site: true, text: 'Neither will you.' },
   },
 
+  // Section 11b — Keziah's File (teaser version).
+  // The manuscript's "she filed it away" motif, shown as evidence: exactly one
+  // entry — from Chapter Three, already read above — is open. The rest are
+  // sealed rows with NO text in the DOM, so nothing past Chapter Three can be
+  // spoiled, searched, or view-sourced. Headings are site copy.
+  file: {
+    kicker: 'Her file',
+    heading: 'She started keeping count.',
+    entry: {
+      label: 'Entry I — the delivery ward',
+      chapter: 'Chapter Three',
+      quote: 'Something that moved across his face too quickly for him to catch it and put it away.',
+    },
+    sealed: ['II', 'III', 'IV', 'V', 'VI'],
+    sealedCaption: 'Sealed — the book opens it.',
+    note: 'The file stays open for seven more chapters.',
+  },
+
   // Section 12 — Conversion (copy as written in §6)
   conversion: {
     eyebrow: 'THE STORY DOESN’T END HERE',

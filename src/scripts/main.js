@@ -314,6 +314,66 @@ if (!reducedMotion) {
   ScrollTrigger.refresh();
 
   /* ----------------------------------------------------------------------- */
+  /* Ambient flamboyant petals.                                               */
+  /* A single fixed canvas of drifting red blossoms — dense and warm while    */
+  /* the light is golden, thinning as dusk falls, gone entirely by Act III.   */
+  /* The tree sheds while the love story is alive; the shadows get no petals. */
+  /* ----------------------------------------------------------------------- */
+  const petalCanvas = document.createElement('canvas');
+  petalCanvas.className = 'petals';
+  petalCanvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(petalCanvas);
+  const pctx = petalCanvas.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  let pw = 0;
+  let ph = 0;
+  const sizePetals = () => {
+    pw = petalCanvas.width = Math.round(innerWidth * DPR);
+    ph = petalCanvas.height = Math.round(innerHeight * DPR);
+  };
+  sizePetals();
+  window.addEventListener('resize', sizePetals, { passive: true });
+
+  const PETAL_COLORS = ['#c4452a', '#d95b32', '#a33a22'];
+  const spawnPetal = (anywhere) => ({
+    x: Math.random() * pw,
+    y: anywhere ? Math.random() * ph : -20 * DPR,
+    s: (Math.random() * 5 + 4) * DPR,
+    vy: (Math.random() * 0.5 + 0.35) * DPR,
+    drift: Math.random() * Math.PI * 2,
+    rot: Math.random() * Math.PI,
+    vr: (Math.random() - 0.5) * 0.02,
+    o: Math.random() * 0.35 + 0.25,
+    c: PETAL_COLORS[(Math.random() * PETAL_COLORS.length) | 0],
+  });
+  const petals = Array.from({ length: 26 }, () => spawnPetal(true));
+  let petalClock = 0;
+
+  gsap.ticker.add((time, deltaMs) => {
+    const d = parseFloat(document.documentElement.style.getPropertyValue('--daylight')) || 1;
+    const vis = Math.max(0, Math.min(1, (d - 0.4) / 0.25)); // fully gone by dusk
+    pctx.clearRect(0, 0, pw, ph);
+    if (vis <= 0 || document.hidden) return;
+    petalClock += deltaMs * 0.001;
+    const step = deltaMs / 16.7;
+    for (const p of petals) {
+      p.y += p.vy * step;
+      p.x += Math.sin(petalClock * 0.9 + p.drift) * 0.4 * DPR * step;
+      p.rot += p.vr * step;
+      if (p.y > ph + 20 * DPR) Object.assign(p, spawnPetal(false));
+      pctx.save();
+      pctx.translate(p.x, p.y);
+      pctx.rotate(p.rot);
+      pctx.globalAlpha = p.o * vis;
+      pctx.fillStyle = p.c;
+      pctx.beginPath();
+      pctx.ellipse(0, 0, p.s, p.s * 0.45, 0, 0, Math.PI * 2);
+      pctx.fill();
+      pctx.restore();
+    }
+  });
+
+  /* ----------------------------------------------------------------------- */
   /* Auto-scroll — the 3-minute guided watch.                                 */
   /* One button starts a paced scroll through the whole story; any manual     */
   /* input (wheel, touch, keys) pauses it instantly. Pace is weighted by      */
@@ -429,6 +489,23 @@ if (!reducedMotion) {
   );
   document.querySelectorAll('.vows__shadow').forEach((el) => rmIO.observe(el));
 }
+
+/* ------------------------------------------------------------------------- */
+/* Keziah's File — sealed rows refuse politely (both motion paths)            */
+/* ------------------------------------------------------------------------- */
+const fileCaption = document.getElementById('file-caption');
+document.querySelectorAll('[data-sealed]').forEach((row) => {
+  const deny = () => {
+    row.classList.remove('denied');
+    void row.offsetWidth; // restart the shake animation
+    row.classList.add('denied');
+    if (fileCaption) fileCaption.textContent = fileCaption.dataset.text || '';
+  };
+  row.addEventListener('click', deny);
+  row.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); deny(); }
+  });
+});
 
 /* ------------------------------------------------------------------------- */
 /* Email capture (§6)                                                         */

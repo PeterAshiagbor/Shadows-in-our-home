@@ -579,6 +579,103 @@ body:not(.js) .vows__shadow,
 body:not(.js) .last-line__bridge { opacity: 0.9; }
 
 /* ---------------------------------------------------------------------------
+   Section 11b — Keziah's File (teaser: one entry open, the rest sealed)
+--------------------------------------------------------------------------- */
+.file {
+  background: var(--shadow);
+  color: var(--page);
+}
+.file__inner {
+  max-width: 26rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.file__heading { font-size: clamp(1.8rem, 5vw, 2.6rem); }
+.file__card {
+  text-align: left;
+  background: #221b15;
+  border: 1px solid rgba(245, 235, 220, 0.14);
+  border-left: 3px solid var(--flamboyant);
+  border-radius: 3px;
+  padding: 1.25rem 1.4rem;
+  margin-top: 2rem;
+  transform: rotate(-0.6deg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+.file__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sunlight);
+  opacity: 0.85;
+  margin-bottom: 0.9rem;
+}
+.file__card blockquote {
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+.file__sealed {
+  list-style: none;
+  padding: 0;
+  margin: 1.75rem 0 0;
+  text-align: left;
+}
+.file__row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0.4rem;
+  border-bottom: 1px solid rgba(245, 235, 220, 0.08);
+  cursor: pointer;
+  opacity: 0.6;
+}
+.file__row:focus-visible { outline: 1px solid var(--sunlight); outline-offset: 2px; }
+.file__num {
+  font-family: var(--font-utility);
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sunlight);
+  min-width: 5.2em;
+  opacity: 0.8;
+}
+.file__lock { font-size: 0.7rem; opacity: 0.5; }
+.file__row.denied { animation: file-shake 0.35s ease; }
+@keyframes file-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  60% { transform: translateX(3px); }
+}
+.file__caption {
+  min-height: 1.5em;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: color-mix(in oklab, var(--page) 70%, var(--sunlight) 30%);
+}
+.file__note {
+  margin-top: 1.75rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Ambient flamboyant petals — alive in the golden acts, gone by dusk */
+.petals {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ---------------------------------------------------------------------------
    Section 12 — Conversion (§6)
 --------------------------------------------------------------------------- */
 .cta {
