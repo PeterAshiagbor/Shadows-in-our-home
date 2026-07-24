@@ -25,21 +25,38 @@ npm run generate:images   # needs GEMINI_API_KEY — see assets/ASSETS.md
 
 Deploy target: Vercel (static; no server except the email-capture endpoint).
 
-## ⚠️ Before launch — two hard blockers
+## Story text & the foreshadow layer
 
-1. **Manuscript text.** `SHADOWS_IN_OUR_HOME_STORY_updated_Chapter_10.docx` was
-   not available at build time. Every prose block marked `todo: true` in
-   `src/content/story.js` is a stand-in and renders with a visible amber
-   "stand-in — replace with manuscript text" tag. Replace each with verbatim
-   manuscript excerpts (abridge by cutting scenes, never rewriting sentences;
-   target ~2,500–3,500 words total). Lines quoted directly in the build spec
-   (the hook, the seat exchange, the fracture dialogue, the final line, all
-   CTA copy) are already in place verbatim and are not flagged.
-2. **Imagery.** No `GEMINI_API_KEY` was available, so the page runs on
-   act-tinted placeholder gradients. Follow `assets/ASSETS.md`: generate the
-   two character sheets, lock style, generate the 12-shot list, review
-   candidates, export web-ready files and update the `shots` manifest in
-   `src/content/story.js`.
+All story prose in `src/content/story.js` is **verbatim manuscript text**,
+abridged by scene selection only (sentences never rewritten). The manuscript
+docx itself is deliberately **not** committed to this repository; only its
+cover image was extracted (`public/assets/cover-640.*`).
+
+The site doesn't just tell Chapters 1–3 chronologically — it carries the
+essence of where the story goes, using only material from Chapters 1–3:
+
+- **Whisper interludes** (`#w1`, `#w2`): the author's own foreshadowing
+  passages, staged as moments where a shadow passes over the page mid-scroll —
+  darkness scrubs 0 → 1 → 0 while the lines hold sticky at centre screen.
+  `#w2` is the book's thesis ("…the shadows in a home are not always cast by
+  the people who built it. Sometimes they are inherited.") — the title moment.
+- **The vows' shadow** (`[data-vows]`): the wedding vows, with the narrator's
+  warning ("She would remember those words later…") fading in beneath them.
+- **The bridge** (`[data-bridge]`): after the final line, alone in the dark —
+  "Neither will you." (site copy, not manuscript).
+- **"What remains"** in the CTA: real chapter titles IV–VI sinking into
+  shadow; VII–X rendered as smudges with **no title text in the DOM**, so
+  nothing from the back half can be spoiled, searched, or view-sourced.
+
+Never reveal on the page: the affair, Brielle, or the ending (spec §2).
+
+## ⚠️ Before launch — one hard blocker
+
+**Imagery.** No `GEMINI_API_KEY` was available, so the page runs on
+act-tinted placeholder gradients. Follow `assets/ASSETS.md`: generate the
+two character sheets, lock style, generate the 12-shot list, review
+candidates, export web-ready files and update the `shots` manifest in
+`src/content/story.js`.
 
 ## Open items (spec §9) — all live in `src/config.js`
 

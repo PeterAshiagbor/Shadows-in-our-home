@@ -116,6 +116,15 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll(revealSelector).forEach((el) => io.observe(el));
 
+// The bridge line out of the story ("Neither will you.") — both motion paths.
+const bridgeIO = new IntersectionObserver(
+  (entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('revealed'); bridgeIO.unobserve(e.target); }
+  }),
+  { threshold: 0.9 }
+);
+document.querySelectorAll('[data-bridge]').forEach((el) => bridgeIO.observe(el));
+
 /* ------------------------------------------------------------------------- */
 /* Scroll-depth + funnel events (§8)                                          */
 /* ------------------------------------------------------------------------- */
@@ -180,6 +189,10 @@ if (!reducedMotion) {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
+  // Trigger positions are cached at refresh time; the swapped-in web fonts
+  // change every prose block's height, so re-measure once they arrive.
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
   // Parallax on full-bleed media
   document.querySelectorAll('[data-parallax] img').forEach((img) => {
     gsap.fromTo(img, { yPercent: -8 }, {
@@ -199,15 +212,40 @@ if (!reducedMotion) {
     });
   }
 
-  // Section 3 — the exchange. Pinned; two lines land with a beat between them.
+  // Section 3 — the exchange. Pinned; four beats land one at a time,
+  // with a rest at the end so the last line can breathe before unpinning.
   const beats3 = gsap.utils.toArray('#s3 [data-beat]');
   beats3.forEach((el) => gsap.set(el, { transition: 'none' }));
-  gsap.timeline({
-    scrollTrigger: { trigger: '#s3', start: 'top top', end: '+=140%', pin: true, scrub: true },
-  })
-    .to(beats3[0], { opacity: 1, y: 0, duration: 0.2 }, 0.08)
-    .to(beats3[1], { opacity: 1, y: 0, duration: 0.2 }, 0.55)
-    .to({}, { duration: 0.25 }); // rest — let the exchange breathe before unpinning
+  const tl3 = gsap.timeline({
+    scrollTrigger: { trigger: '#s3', start: 'top top', end: '+=180%', pin: true, scrub: true },
+  });
+  beats3.forEach((el, i) => {
+    tl3.to(el, { opacity: 1, y: 0, duration: 0.14 }, 0.06 + i * 0.2);
+  });
+  tl3.to({}, { duration: 0.22 });
+
+  // Whisper interludes — a shadow passes over the page (0 → 1 → 0),
+  // and the foreshadow lines are only legible while the light is failing.
+  document.querySelectorAll('.whisper').forEach((w) => {
+    const v = { t: 0 };
+    gsap.timeline({
+      scrollTrigger: { trigger: w, start: 'top 65%', end: 'bottom 35%', scrub: true },
+    })
+      .to(v, { t: 1, duration: 0.42, ease: 'power1.inOut', onUpdate: () => w.style.setProperty('--whisper', v.t) })
+      .to(v, { t: 1, duration: 0.16, onUpdate: () => w.style.setProperty('--whisper', v.t) })
+      .to(v, { t: 0, duration: 0.42, ease: 'power1.inOut', onUpdate: () => w.style.setProperty('--whisper', v.t) });
+  });
+
+  // The vows' shadow — the warning fades in beneath the vows as they pass.
+  document.querySelectorAll('[data-vows]').forEach((el) => {
+    const v = { t: 0 };
+    gsap.to(v, {
+      t: 1,
+      ease: 'none',
+      onUpdate: () => el.style.setProperty('--vows-shadow', v.t),
+      scrollTrigger: { trigger: el, start: 'top 75%', end: 'top 35%', scrub: true },
+    });
+  });
 
   // Section 6 — horizontal montage scrub (the only horizontal moment)
   const track6 = document.querySelector('[data-montage] .montage__track');
@@ -238,20 +276,28 @@ if (!reducedMotion) {
     });
   });
 
-  // Section 10 — the fracture. Pinned; each dialogue beat dims the scene.
+  // Section 10 — the fracture. Pinned; each beat dims the scene a step
+  // further, so the room literally darkens as the conversation closes down.
   const s10 = document.getElementById('s10');
-  const beats10 = gsap.utils.toArray('#s10 [data-beat]');
+  const beats10 = gsap.utils
+    .toArray('#s10 [data-beat]')
+    .sort((a, b) => Number(a.dataset.beat) - Number(b.dataset.beat));
   beats10.forEach((el) => gsap.set(el, { transition: 'none' }));
   const dim = { v: 0 };
-  gsap.timeline({
-    scrollTrigger: { trigger: '#s10', start: 'top top', end: '+=200%', pin: true, scrub: true },
-  })
-    .to(beats10[0], { opacity: 1, y: 0, duration: 0.12 }, 0.1)
-    .to(dim, { v: 0.35, duration: 0.15, onUpdate: () => s10.style.setProperty('--fracture-dim', dim.v) }, 0.22)
-    .to(beats10[1], { opacity: 1, y: 0, duration: 0.12 }, 0.42)
-    .to(dim, { v: 0.7, duration: 0.15, onUpdate: () => s10.style.setProperty('--fracture-dim', dim.v) }, 0.54)
-    .to(beats10[2], { opacity: 1, y: 0, duration: 0.12 }, 0.72)
-    .to(dim, { v: 1, duration: 0.2, onUpdate: () => s10.style.setProperty('--fracture-dim', dim.v) }, 0.8);
+  const tl10 = gsap.timeline({
+    scrollTrigger: { trigger: '#s10', start: 'top top', end: '+=240%', pin: true, scrub: true },
+  });
+  const n10 = beats10.length;
+  beats10.forEach((el, i) => {
+    const at = 0.08 + (i * 0.8) / n10;
+    tl10.to(el, { opacity: 1, y: 0, duration: 0.1 }, at);
+    tl10.to(
+      dim,
+      { v: (i + 1) / n10, duration: 0.08, onUpdate: () => s10.style.setProperty('--fracture-dim', dim.v) },
+      at + 0.09
+    );
+  });
+  tl10.to({}, { duration: 0.12 });
 
   // Section 12 — CTA rises glowing out of the dark
   gsap.from('.cta__inner', {
@@ -261,10 +307,24 @@ if (!reducedMotion) {
     ease: 'power2.out',
     scrollTrigger: { trigger: '#s12', start: 'top 70%' },
   });
+
+  // Triggers above are not created in strict document order (pins vs whispers),
+  // so re-sort before measuring or pin spacers throw every later start off.
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
 } else {
-  // Reduced motion: montage becomes a plain horizontally scrollable strip.
+  // Reduced motion: montage becomes a plain horizontally scrollable strip;
+  // whispers and the vows' shadow are simply visible (no scrubbing).
   const m = document.querySelector('[data-montage]');
   if (m) m.style.overflowX = 'auto';
+  document.querySelectorAll('.whisper').forEach((w) => w.style.setProperty('--whisper', '1'));
+  const rmIO = new IntersectionObserver(
+    (entries) => entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); rmIO.unobserve(e.target); }
+    }),
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll('.vows__shadow').forEach((el) => rmIO.observe(el));
 }
 
 /* ------------------------------------------------------------------------- */

@@ -1,6 +1,6 @@
 ---
 import { config } from '../config.js';
-import { story, shots, coverSrc } from '../content/story.js';
+import { story, shots, cover } from '../content/story.js';
 import '../styles/global.css';
 
 const shot = (id) => shots.find((s) => s.id === id);
@@ -26,7 +26,7 @@ const bookSchema = {
     <meta property="og:title" content="Shadows in Our Home" />
     <meta property="og:description" content={config.description} />
     <meta property="og:type" content="book" />
-    <meta property="og:image" content="/assets/og-cover.png" />
+    <meta property="og:image" content="/assets/og-cover.jpg" />
     <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(bookSchema)} />
@@ -53,12 +53,15 @@ const bookSchema = {
       <p class="hero__cue">{story.title.scrollCue}</p>
     </section>
 
-    <!-- 1 · Hook line -->
+    <!-- 1 · Hook line (two beats) -->
     <section class="section section--full hero hook" data-act="1" id="s1">
       <div class="hero__media hook__media">
         <img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" data-sharpen />
       </div>
-      <p class="hook__line will-reveal">{story.hook}</p>
+      <div class="hook__lines">
+        <p class="hook__line will-reveal">{story.hook.line}</p>
+        <p class="hook__line hook__line--beat will-reveal">{story.hook.beat}</p>
+      </div>
     </section>
 
     <!-- 2 · Ch 1 scene A — Zarek watching; Kwame's teasing -->
@@ -66,44 +69,48 @@ const bookSchema = {
       <div class="prose panel">
         <p class="kicker">{story.ch1a.kicker}</p>
         <h2 class="chapter-heading">{story.ch1a.heading}</h2>
-        {story.ch1a.blocks.map((b) => (
-          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
-        ))}
+        {story.ch1a.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
         <div class="dialogue">
-          {story.ch1a.dialogue.map((d) => (
-            <p class="will-reveal" data-manuscript-todo={d.todo || undefined}>{d.line}</p>
-          ))}
+          {story.ch1a.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
         </div>
+        {story.ch1a.close.map((b) => <p class="will-reveal">{b.text}</p>)}
       </div>
       <figure class="figure">
         <img src={shot(3).src} alt={shot(3).alt} loading="lazy" decoding="async" />
       </figure>
     </section>
 
-    <!-- 3 · Ch 1 scene B — the exchange (pinned, given space) -->
+    <!-- 3 · Ch 1 scene B — the exchange (pinned, four beats, given space) -->
     <section class="hero exchange" data-act="1" id="s3" data-pin>
       <div class="hero__media exchange__media">
         <img src={shot(4).src} alt={shot(4).alt} loading="lazy" decoding="async" />
       </div>
       <div class="exchange__lines">
-        <p class="will-reveal" data-beat="1">{story.ch1b.exchange[0].line}</p>
-        <p class="will-reveal" data-beat="2">{story.ch1b.exchange[1].line}</p>
+        {story.ch1b.beats.map((b, i) => (
+          <p class="will-reveal" data-beat={i + 1}>{b}</p>
+        ))}
       </div>
     </section>
 
     <!-- 4 · Ch 1 close -->
     <section class="section" data-act="1" id="s4">
       <div class="prose panel">
-        <p class="will-reveal" data-manuscript-todo={story.ch1b.setup.todo || undefined}>
-          {story.ch1b.setup.text}
-        </p>
-        {story.ch1c.blocks.map((b) => (
-          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
-        ))}
+        {story.ch1c.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
+        <div class="dialogue">
+          {story.ch1c.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
+        </div>
+        {story.ch1c.night.map((b) => <p class="will-reveal">{b.text}</p>)}
       </div>
     </section>
 
-    <!-- 5 · Act break — TWO: Love Blossoms -->
+    <!-- W1 · Whisper — the light flickers for the first time -->
+    <section class="whisper" data-act="1" id="w1" aria-label="A note from the story's future">
+      <div class="whisper__text">
+        {story.whisper1.lines.map((l) => <p>{l}</p>)}
+      </div>
+    </section>
+
+    <!-- 5 · Act break — Love Blossoms -->
     <section class="section section--full hero" data-act="2" id="s5">
       <div class="hero__media" data-parallax>
         <img src={shot(5).src} alt={shot(5).alt} loading="lazy" decoding="async" />
@@ -114,12 +121,13 @@ const bookSchema = {
       </div>
     </section>
 
-    <!-- 6 · Ch 2 montage — the only horizontal moment -->
+    <!-- 6 · Ch 2 — theirs; walks; Kwame; the asking -->
     <section class="section" data-act="2" id="s6">
       <div class="prose panel">
-        {story.ch2.blocks.map((b) => (
-          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
-        ))}
+        {story.ch2.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
+        <div class="dialogue">
+          {story.ch2.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
+        </div>
       </div>
       <div class="montage" data-montage>
         <div class="montage__track">
@@ -128,35 +136,57 @@ const bookSchema = {
           <figure><img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" /></figure>
         </div>
       </div>
+      <div class="prose panel">
+        {story.ch2.asking.map((b) => <p class="will-reveal">{b.text}</p>)}
+      </div>
     </section>
 
     <!-- 7 · Pull quote -->
     <section class="section pull-quote" data-act="2" id="s7">
-      <blockquote class="will-reveal" data-manuscript-todo={story.pullQuote.todo || undefined}>
+      <blockquote class="will-reveal">
         {story.pullQuote.text}
+        <footer>{story.pullQuote.attribution}</footer>
       </blockquote>
     </section>
 
-    <!-- 8 · Ch 3 scene A — proposal + wedding (peak warmth) -->
+    <!-- W2 · Whisper — the book's thesis; the title moment -->
+    <section class="whisper whisper--deep" data-act="2" id="w2" aria-label="A note from the story's future">
+      <div class="whisper__text">
+        {story.whisper2.lines.map((l, i) => (
+          i === story.whisper2.emphasisIndex
+            ? <p class="whisper__emphasis">{l}</p>
+            : <p>{l}</p>
+        ))}
+      </div>
+    </section>
+
+    <!-- 8 · Ch 3 scene A — proposal + wedding + the vows -->
     <section class="section" data-act="3" id="s8">
       <div class="prose panel">
         <p class="kicker">{story.ch3a.kicker}</p>
         <h2 class="chapter-heading">{story.ch3a.heading}</h2>
-        {story.ch3a.blocks.map((b) => (
-          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
-        ))}
+        {story.ch3a.blocks.map((b) => <p class="will-reveal">{b.text}</p>)}
+        <div class="dialogue">
+          {story.ch3a.dialogue.map((d) => <p class="will-reveal">{d.line}</p>)}
+        </div>
       </div>
       <figure class="figure crossfade" data-crossfade>
         <img src={shot(7).src} alt={shot(7).alt} loading="lazy" decoding="async" />
         <img src={shot(8).src} alt={shot(8).alt} loading="lazy" decoding="async" />
       </figure>
+      <div class="vows" data-vows>
+        <p class="vows__line will-reveal">{story.ch3a.vows.line}</p>
+        <div class="vows__shadow">
+          {story.ch3a.vows.shadow.map((l) => <p>{l}</p>)}
+        </div>
+      </div>
     </section>
 
-    <!-- 9 · Ch 3 scene B — Victoria arrives; daylight starts dropping -->
+    <!-- 9 · Ch 3 scene B — Victoria arrives; daylight drops -->
     <section class="section" data-act="3" id="s9">
       <div class="prose panel">
         {story.ch3b.blocks.map((b) => (
-          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+          <p class:list={['will-reveal', { 'quiet-beat': b.quiet }]}>{b.text}</p>
         ))}
       </div>
       <figure class="figure crossfade" data-crossfade>
@@ -172,15 +202,14 @@ const bookSchema = {
       </div>
       <div class="fracture__dim" aria-hidden="true"></div>
       <div class="fracture__content">
-        <p class="fracture__intro will-reveal">{story.fracture.intro.text}</p>
+        {story.fracture.intro.map((t, i) => (
+          <p class="fracture__intro will-reveal" data-beat={i === 0 ? undefined : i}>{t}</p>
+        ))}
         <div class="dialogue">
           {story.fracture.dialogue.map((d, i) => (
-            <p class="will-reveal" data-beat={i + 1}>{d.line}</p>
+            <p class="will-reveal" data-beat={i + 3}>{d.line}</p>
           ))}
         </div>
-        <p class="will-reveal" data-beat="3" data-manuscript-todo={story.fracture.after.todo || undefined}>
-          {story.fracture.after.text}
-        </p>
       </div>
     </section>
 
@@ -190,15 +219,35 @@ const bookSchema = {
         <p class="last-line__lead will-reveal">{story.lastLine.lead}</p>
         <p class="last-line__final will-reveal"><strong>{story.lastLine.final}</strong></p>
       </div>
+      <p class="last-line__bridge" data-bridge>{story.lastLine.bridge.text}</p>
     </section>
 
     <!-- 12 · Conversion -->
     <section class="cta" data-act="4" id="s12">
       <div class="cta__inner">
-        <img class="cta__cover will-reveal" src={coverSrc} alt="Shadows in Our Home — book cover" loading="lazy" decoding="async" />
+        <picture>
+          <source srcset={cover.webp} type="image/webp" />
+          <img class="cta__cover will-reveal" src={cover.jpg} alt={cover.alt} loading="lazy" decoding="async" width="640" height="959" />
+        </picture>
         <p class="cta__eyebrow">{story.conversion.eyebrow}</p>
         <h2 class="cta__headline">{story.conversion.headline}</h2>
         <p class="cta__subhead">{story.conversion.subhead}</p>
+
+        <ol class="remaining" aria-label="The chapters that remain">
+          <li class="remaining__label">{story.conversion.remaining.label}</li>
+          {story.conversion.remaining.visible.map((c, i) => (
+            <li class={`remaining__item remaining__item--fade${i}`}>
+              <span class="remaining__num">{c.num}</span> {c.title}
+            </li>
+          ))}
+          {story.conversion.remaining.hidden.map((num) => (
+            <li class="remaining__item remaining__item--hidden" aria-hidden="true">
+              <span class="remaining__num">{num}</span> <span class="remaining__smudge"></span>
+            </li>
+          ))}
+          <li class="sr-only">{story.conversion.remaining.hiddenNote}</li>
+        </ol>
+
         <a
           class="cta__button"
           id="buy-cta"
@@ -226,7 +275,7 @@ const bookSchema = {
         <div class="capture" id="capture">
           <h3>{story.conversion.emailHeading}</h3>
           <form id="capture-form" method="post" action={config.emailEndpoint || '#'}>
-            <label class="sr-only" for="capture-email" style="position:absolute;left:-9999px;">Email address</label>
+            <label class="sr-only" for="capture-email">Email address</label>
             <input id="capture-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
             <button type="submit">{story.conversion.emailButton}</button>
           </form>
