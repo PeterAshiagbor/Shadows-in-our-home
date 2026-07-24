@@ -44,6 +44,11 @@ export const config = {
   ],
 
   // SEO
-  title: 'Shadows in Our Home — read the first three chapters',
-  description: "Zarek didn't believe in love at first sight. But he believed in moments.",
+  // <title>: brand + value prop first (Google truncates ~60 chars), author last.
+  title: 'Shadows in Our Home — Read Chapters 1–3 Free | Priscilla Frimpong-Manso',
+  // Meta/OG description: keyword-rich for search, still reads well as a social card.
+  description:
+    'A tender Ghanaian love story by Priscilla Frimpong-Manso. Read the first three chapters free — before the shadows fall on Zarek and Keziah’s family.',
+  // The line used on the page and kept as the evocative social hook.
+  tagline: "Zarek didn't believe in love at first sight. But he believed in moments.",
 };

@@ -6,14 +6,35 @@ import '../styles/global.css';
 
 const shot = (id) => shots.find((s) => s.id === id);
 
-const bookSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Book',
-  name: 'Shadows in Our Home',
-  author: { '@type': 'Person', name: config.author },
-  inLanguage: 'en',
-  // OPEN ITEM §7: add ISBN + per-retailer `offers` once listings are live
-};
+const siteUrl = Astro.site?.href ?? 'https://shadows-in-our-home.vercel.app/';
+const ogImage = new URL('/assets/og-cover.jpg', siteUrl).href;
+
+const author = { '@type': 'Person', name: config.author };
+
+// Book + WebSite structured data. Truthful only — no ISBN, offers, dates, or
+// ratings until they genuinely exist (§7). Add them here when the book is live.
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    name: 'Shadows in Our Home',
+    author,
+    inLanguage: 'en',
+    bookFormat: 'https://schema.org/EBook',
+    genre: ['Contemporary fiction', 'Domestic drama', 'African literature'],
+    description: config.description,
+    image: ogImage,
+    url: siteUrl,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Shadows in Our Home',
+    url: siteUrl,
+    inLanguage: 'en',
+    author,
+  },
+];
 ---
 
 <!doctype html>
@@ -23,20 +44,33 @@ const bookSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{config.title}</title>
     <meta name="description" content={config.description} />
+    <meta name="author" content={config.author} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#171310" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="canonical" href={Astro.site} />
+    <link rel="canonical" href={siteUrl} />
+
+    <meta property="og:site_name" content="Shadows in Our Home" />
     <meta property="og:title" content="Shadows in Our Home" />
     <meta property="og:description" content={config.description} />
     <meta property="og:type" content="book" />
-    <meta property="og:url" content={Astro.site} />
-    <meta property="og:image" content={new URL('/assets/og-cover.jpg', Astro.site)} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content={siteUrl} />
+    <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Shadows in Our Home — book cover" />
+    <meta property="book:author" content={config.author} />
+
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content={new URL('/assets/og-cover.jpg', Astro.site)} />
+    <meta name="twitter:title" content="Shadows in Our Home" />
+    <meta name="twitter:description" content={config.description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Shadows in Our Home — book cover" />
+
     <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin />
-    <script type="application/ld+json" set:html={JSON.stringify(bookSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <script>document.body.classList.add('js');</script>
