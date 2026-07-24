@@ -479,6 +479,9 @@ if (!reducedMotion) {
   }
 
   function startAuto() {
+    // The guided watch will pass every image — fetch them all now so photos
+    // are ready before the scroll reaches them, even on slow connections.
+    document.querySelectorAll('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
     auto.plan = buildPlan();
     const yNow = window.scrollY;
     auto.seg = auto.plan.findIndex((s) => s.to > yNow + 10);

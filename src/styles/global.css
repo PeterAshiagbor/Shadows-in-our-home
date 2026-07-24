@@ -1071,4 +1071,13 @@ body:not(.js) .last-line__bridge { opacity: 0.9; }
   .will-reveal { transform: none; transition: opacity 0.4s ease; }
   .hero__cue { animation: none; }
   .cta__button, .cta__button:hover { transition: none; transform: none; }
+  /* the blur-to-sharp scrub never runs here — serve the image sharp */
+  .hook__media img { filter: none; }
+  /* crossfades never scrub here — show both photos, stacked */
+  .crossfade img + img,
+  .crossfade picture + picture img {
+    position: static;
+    opacity: 1;
+    margin-top: 1rem;
+  }
 }
