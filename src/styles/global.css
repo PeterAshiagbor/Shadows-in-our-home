@@ -111,6 +111,9 @@ body:not(.js) section[data-act='4'] { background: var(--shadow); color: #e9ddcc;
 }
 .prose p + p { margin-top: 1.4em; }
 
+/* word-lift spans (created by JS in full-motion mode) */
+.w { display: inline-block; }
+
 .panel {
   background: var(--panel);
   backdrop-filter: blur(2px);

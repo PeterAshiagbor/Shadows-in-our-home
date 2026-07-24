@@ -35,7 +35,8 @@ export const story = {
     kicker: 'Chapter One',
     heading: 'The First Spark',
     blocks: [
-      { text: 'The sun was dipping gently behind the tall mango trees surrounding Ganada Teacher Training College, casting a warm, golden glow over the campus. Students moved about in clusters—some rushing to evening prep, others laughing loudly as they teased friends. It was an ordinary day for everyone, except for Zarek Jonathan Quaye, who felt something unusual stirring inside him.' },
+      { text: 'The sun was dipping gently behind the tall mango trees surrounding Ganada Teacher Training College, casting a warm, golden glow over the campus.' },
+      { text: 'It was an ordinary day for everyone, except for Zarek Jonathan Quaye, who felt something unusual stirring inside him.' },
       { text: 'He was leaning against the railing of the library staircase, pretending to flip through his notes, though his eyes kept drifting to the girl sitting under the flamboyant tree across the courtyard.' },
       { text: 'Her name was Keziah Richer Mensah.' },
     ],
@@ -62,7 +63,8 @@ export const story = {
   // Section 4 — Ch 1 close: the conversation, her backstory
   ch1c: {
     blocks: [
-      { text: 'They talked—slowly at first, then with surprising ease. What started as innocent questions about classes and assignments grew into a real conversation. She told him she wanted to make a difference, especially for girls who grew up without many opportunities. That day he found out that Keziah was the daughter of a single mum who raised her with money from her sales from the market and being a cleaner at an investment company.' },
+      { text: 'They talked—slowly at first, then with surprising ease. What started as innocent questions about classes and assignments grew into a real conversation.' },
+      { text: 'She told him she wanted to make a difference, especially for girls who grew up without many opportunities. That day he found out that Keziah was the daughter of a single mum who raised her with money from her sales from the market and being a cleaner at an investment company.' },
       { text: 'He listened, captivated.' },
     ],
     dialogue: [
@@ -92,7 +94,9 @@ export const story = {
       { text: 'The courtyard under the flamboyant tree became their place.' },
       { text: 'Every evening after his shift at the hospital, Zarek would find Keziah there — sometimes reading, sometimes just thinking, her fingers absently tracing the cover of whatever book rested in her lap. He stopped pretending he came to see Kwame.' },
       { text: 'They both knew why he came.' },
-      { text: 'It started with conversations that stretched past the prep bell, past supper, until the security guard’s torch swept across the courtyard and Keziah would laugh softly and gather her things. Then it became walks — slow, unhurried ones along the dusty path behind the administration block where the jacaranda trees lined the road like purple sentinels. Then it became something neither of them had a proper word for yet, but both of them felt.' },
+      { text: 'It started with conversations that stretched past the prep bell, past supper, until the security guard’s torch swept across the courtyard and Keziah would laugh softly and gather her things.' },
+      { text: 'Then it became walks — slow, unhurried ones along the dusty path behind the administration block where the jacaranda trees lined the road like purple sentinels.' },
+      { text: 'Then it became something neither of them had a proper word for yet, but both of them felt.' },
     ],
     dialogue: [],
     asking: [

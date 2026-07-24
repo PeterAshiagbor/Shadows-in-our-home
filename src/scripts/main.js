@@ -308,6 +308,46 @@ if (!reducedMotion) {
     scrollTrigger: { trigger: '#s12', start: 'top 70%' },
   });
 
+  /* ----------------------------------------------------------------------- */
+  /* Word-lift — prose paragraphs raise their words in sequence as they       */
+  /* scroll into view. Scrubbed, so it reads the same whether the reader is   */
+  /* thumb-scrolling or the auto-scroll is carrying them. Screen readers get  */
+  /* the intact sentence via aria-label; the spans are presentation only.     */
+  /* ----------------------------------------------------------------------- */
+  document.querySelectorAll('.panel p.will-reveal').forEach((p) => {
+    const text = p.textContent;
+    p.setAttribute('aria-label', text);
+    p.classList.add('revealed'); // word spans take over from the block reveal
+    p.style.transition = 'none';
+    const frag = document.createDocumentFragment();
+    text.split(/(\s+)/).forEach((tok) => {
+      if (!tok) return;
+      if (/^\s+$/.test(tok)) {
+        frag.appendChild(document.createTextNode(tok));
+      } else {
+        const s = document.createElement('span');
+        s.className = 'w';
+        s.setAttribute('aria-hidden', 'true');
+        s.textContent = tok;
+        frag.appendChild(s);
+      }
+    });
+    p.textContent = '';
+    p.appendChild(frag);
+    gsap.fromTo(
+      p.querySelectorAll('.w'),
+      { opacity: 0.1, y: 10 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.35,
+        ease: 'none',
+        stagger: { amount: 0.65 },
+        scrollTrigger: { trigger: p, start: 'top 90%', end: 'top 52%', scrub: true },
+      }
+    );
+  });
+
   // Triggers above are not created in strict document order (pins vs whispers),
   // so re-sort before measuring or pin spacers throw every later start off.
   ScrollTrigger.sort();
