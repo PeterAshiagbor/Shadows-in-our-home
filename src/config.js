@@ -3,7 +3,7 @@
 
 export const config = {
   // §9.1 — Author name for the title card and footer
-  author: '[AUTHOR NAME]',
+  author: 'Priscilla Frimpong-Manso',
 
   // §9.2 — Price shown on the primary CTA
   price: '[PRICE]',
