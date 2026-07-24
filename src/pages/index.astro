@@ -1,0 +1,263 @@
+---
+import { config } from '../config.js';
+import { story, shots, coverSrc } from '../content/story.js';
+import '../styles/global.css';
+
+const shot = (id) => shots.find((s) => s.id === id);
+
+const bookSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: 'Shadows in Our Home',
+  author: { '@type': 'Person', name: config.author },
+  inLanguage: 'en',
+  // OPEN ITEM §7: add ISBN + per-retailer `offers` once listings are live
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{config.title}</title>
+    <meta name="description" content={config.description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content="Shadows in Our Home" />
+    <meta property="og:description" content={config.description} />
+    <meta property="og:type" content="book" />
+    <meta property="og:image" content="/assets/og-cover.png" />
+    <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(bookSchema)} />
+  </head>
+  <body>
+    <script>document.body.classList.add('js');</script>
+
+    <div class="progress" id="progress" aria-hidden="true"></div>
+
+    <!-- 0 · Title -->
+    <section class="section section--full hero" data-act="1" id="s0">
+      <div class="hero__media" data-parallax>
+        <img
+          src={shot(1).src}
+          alt={shot(1).alt}
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+      <div class="hero__content">
+        <h1 class="hero__title">Shadows in Our&nbsp;Home</h1>
+        <p class="hero__byline">{story.title.byline} {config.author}</p>
+      </div>
+      <p class="hero__cue">{story.title.scrollCue}</p>
+    </section>
+
+    <!-- 1 · Hook line -->
+    <section class="section section--full hero hook" data-act="1" id="s1">
+      <div class="hero__media hook__media">
+        <img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" data-sharpen />
+      </div>
+      <p class="hook__line will-reveal">{story.hook}</p>
+    </section>
+
+    <!-- 2 · Ch 1 scene A — Zarek watching; Kwame's teasing -->
+    <section class="section" data-act="1" id="s2">
+      <div class="prose panel">
+        <p class="kicker">{story.ch1a.kicker}</p>
+        <h2 class="chapter-heading">{story.ch1a.heading}</h2>
+        {story.ch1a.blocks.map((b) => (
+          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+        ))}
+        <div class="dialogue">
+          {story.ch1a.dialogue.map((d) => (
+            <p class="will-reveal" data-manuscript-todo={d.todo || undefined}>{d.line}</p>
+          ))}
+        </div>
+      </div>
+      <figure class="figure">
+        <img src={shot(3).src} alt={shot(3).alt} loading="lazy" decoding="async" />
+      </figure>
+    </section>
+
+    <!-- 3 · Ch 1 scene B — the exchange (pinned, given space) -->
+    <section class="hero exchange" data-act="1" id="s3" data-pin>
+      <div class="hero__media exchange__media">
+        <img src={shot(4).src} alt={shot(4).alt} loading="lazy" decoding="async" />
+      </div>
+      <div class="exchange__lines">
+        <p class="will-reveal" data-beat="1">{story.ch1b.exchange[0].line}</p>
+        <p class="will-reveal" data-beat="2">{story.ch1b.exchange[1].line}</p>
+      </div>
+    </section>
+
+    <!-- 4 · Ch 1 close -->
+    <section class="section" data-act="1" id="s4">
+      <div class="prose panel">
+        <p class="will-reveal" data-manuscript-todo={story.ch1b.setup.todo || undefined}>
+          {story.ch1b.setup.text}
+        </p>
+        {story.ch1c.blocks.map((b) => (
+          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+        ))}
+      </div>
+    </section>
+
+    <!-- 5 · Act break — TWO: Love Blossoms -->
+    <section class="section section--full hero" data-act="2" id="s5">
+      <div class="hero__media" data-parallax>
+        <img src={shot(5).src} alt={shot(5).alt} loading="lazy" decoding="async" />
+      </div>
+      <div class="act-break__card will-reveal">
+        <p class="act-break__number">{story.actTwo.number}</p>
+        <h2 class="act-break__title">{story.actTwo.title}</h2>
+      </div>
+    </section>
+
+    <!-- 6 · Ch 2 montage — the only horizontal moment -->
+    <section class="section" data-act="2" id="s6">
+      <div class="prose panel">
+        {story.ch2.blocks.map((b) => (
+          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+        ))}
+      </div>
+      <div class="montage" data-montage>
+        <div class="montage__track">
+          <figure><img src={shot(5).src} alt={shot(5).alt} loading="lazy" decoding="async" /></figure>
+          <figure><img src={shot(6).src} alt={shot(6).alt} loading="lazy" decoding="async" /></figure>
+          <figure><img src={shot(2).src} alt={shot(2).alt} loading="lazy" decoding="async" /></figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 · Pull quote -->
+    <section class="section pull-quote" data-act="2" id="s7">
+      <blockquote class="will-reveal" data-manuscript-todo={story.pullQuote.todo || undefined}>
+        {story.pullQuote.text}
+      </blockquote>
+    </section>
+
+    <!-- 8 · Ch 3 scene A — proposal + wedding (peak warmth) -->
+    <section class="section" data-act="3" id="s8">
+      <div class="prose panel">
+        <p class="kicker">{story.ch3a.kicker}</p>
+        <h2 class="chapter-heading">{story.ch3a.heading}</h2>
+        {story.ch3a.blocks.map((b) => (
+          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+        ))}
+      </div>
+      <figure class="figure crossfade" data-crossfade>
+        <img src={shot(7).src} alt={shot(7).alt} loading="lazy" decoding="async" />
+        <img src={shot(8).src} alt={shot(8).alt} loading="lazy" decoding="async" />
+      </figure>
+    </section>
+
+    <!-- 9 · Ch 3 scene B — Victoria arrives; daylight starts dropping -->
+    <section class="section" data-act="3" id="s9">
+      <div class="prose panel">
+        {story.ch3b.blocks.map((b) => (
+          <p class="will-reveal" data-manuscript-todo={b.todo || undefined}>{b.text}</p>
+        ))}
+      </div>
+      <figure class="figure crossfade" data-crossfade>
+        <img src={shot(9).src} alt={shot(9).alt} loading="lazy" decoding="async" />
+        <img src={shot(10).src} alt={shot(10).alt} loading="lazy" decoding="async" />
+      </figure>
+    </section>
+
+    <!-- 10 · The fracture (pinned; each beat dims the scene) -->
+    <section class="hero section--full fracture" data-act="4" id="s10" data-pin>
+      <div class="hero__media fracture__media">
+        <img src={shot(11).src} alt={shot(11).alt} loading="lazy" decoding="async" />
+      </div>
+      <div class="fracture__dim" aria-hidden="true"></div>
+      <div class="fracture__content">
+        <p class="fracture__intro will-reveal">{story.fracture.intro.text}</p>
+        <div class="dialogue">
+          {story.fracture.dialogue.map((d, i) => (
+            <p class="will-reveal" data-beat={i + 1}>{d.line}</p>
+          ))}
+        </div>
+        <p class="will-reveal" data-beat="3" data-manuscript-todo={story.fracture.after.todo || undefined}>
+          {story.fracture.after.text}
+        </p>
+      </div>
+    </section>
+
+    <!-- 11 · The last line -->
+    <section class="last-line" data-act="4" id="s11">
+      <div>
+        <p class="last-line__lead will-reveal">{story.lastLine.lead}</p>
+        <p class="last-line__final will-reveal"><strong>{story.lastLine.final}</strong></p>
+      </div>
+    </section>
+
+    <!-- 12 · Conversion -->
+    <section class="cta" data-act="4" id="s12">
+      <div class="cta__inner">
+        <img class="cta__cover will-reveal" src={coverSrc} alt="Shadows in Our Home — book cover" loading="lazy" decoding="async" />
+        <p class="cta__eyebrow">{story.conversion.eyebrow}</p>
+        <h2 class="cta__headline">{story.conversion.headline}</h2>
+        <p class="cta__subhead">{story.conversion.subhead}</p>
+        <a
+          class="cta__button"
+          id="buy-cta"
+          href={config.universalBookLink}
+          data-event="cta_click_buy"
+        >{story.conversion.ctaLabel} — {config.price}</a>
+        <nav class="cta__retailers" aria-label="Buy from a specific store">
+          {config.retailers.map((r) => (
+            <a href={r.href} data-event="cta_click_buy">{r.name}</a>
+          ))}
+        </nav>
+        <p class="cta__risk">{story.conversion.riskReducer}</p>
+
+        {config.testimonials.length > 0 && (
+          <div class="testimonials">
+            {config.testimonials.map((t) => (
+              <blockquote>
+                {t.quote}
+                <cite>{t.name}</cite>
+              </blockquote>
+            ))}
+          </div>
+        )}
+
+        <div class="capture" id="capture">
+          <h3>{story.conversion.emailHeading}</h3>
+          <form id="capture-form" method="post" action={config.emailEndpoint || '#'}>
+            <label class="sr-only" for="capture-email" style="position:absolute;left:-9999px;">Email address</label>
+            <input id="capture-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+            <button type="submit">{story.conversion.emailButton}</button>
+          </form>
+          <p class="capture__msg" id="capture-msg" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · Footer -->
+    <footer class="footer" data-act="4">
+      <p class="footer__bio">
+        <!-- OPEN ITEM §9.1: author bio -->
+        {config.author} writes contemporary African fiction. <em>Shadows in Our Home</em> is
+        their debut novel.
+      </p>
+      {config.socials.length > 0 && (
+        <nav class="footer__links" aria-label="Social links">
+          {config.socials.map((s) => <a href={s.href}>{s.name}</a>)}
+        </nav>
+      )}
+      <p class="footer__imprint">© 2026 {config.author}. All rights reserved.</p>
+    </footer>
+
+    <!-- Persistent UI -->
+    <a class="sticky-cta" id="sticky-cta" href="#s12" data-event="cta_click_sticky">Get the book</a>
+
+    <div class="exit-intent" id="exit-intent" role="dialog" aria-label="Free chapter offer" aria-hidden="true">
+      <button type="button" id="exit-close" aria-label="Close">×</button>
+      <p>Before you go — <a href="#capture">get Chapter 4 free by email</a>. No spoilers, no spam.</p>
+    </div>
+
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

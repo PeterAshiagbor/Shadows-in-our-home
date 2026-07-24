@@ -1,0 +1,20 @@
+{
+  "name": "shadows-in-our-home",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "generate:images": "node scripts/generate-images.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.7.0",
+    "gsap": "^3.12.7",
+    "lenis": "^1.2.3"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.61.1"
+  }
+}

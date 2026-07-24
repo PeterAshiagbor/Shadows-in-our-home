@@ -1,0 +1,652 @@
+/* ---------------------------------------------------------------------------
+   SHADOWS IN OUR HOME — global styles
+   The whole site is one continuous lighting system (§3):
+   a scroll-driven --daylight value (1 → 0) drives ground colour, ink colour,
+   panel tint and shadow length everywhere. JS interpolates the palette and
+   sets the custom properties on :root; without JS each section falls back to
+   a static per-act palette via [data-act].
+--------------------------------------------------------------------------- */
+
+/* ---- Fonts (self-hosted, subset latin, variable) ---- */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/fraunces.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader.woff2') format('woff2');
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/newsreader-italic.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo.woff2') format('woff2');
+  font-weight: 500 700;
+  font-display: swap;
+}
+
+/* ---- Palette tokens (§4) ---- */
+:root {
+  --sunlight: #e8a33d;
+  --flamboyant: #c4452a;
+  --kente-earth: #8a5a2b;
+  --dusk: #3e3128;
+  --shadow: #171310;
+  --page: #f5ebdc;
+
+  /* Lighting-system outputs. Defaults = full daylight (Act I).
+     main.js re-writes these every frame from the scroll position. */
+  --daylight: 1;
+  --ground: #f0dfc4;        /* page background */
+  --ink: #2b2118;           /* body text */
+  --ink-soft: #5c4a38;      /* secondary text */
+  --panel: #f5ebdccc;       /* prose panel */
+  --glow: #e8a33d;          /* warm accent, dims with daylight */
+  --shadow-len: 0.25rem;    /* ambient shadow length, grows as light falls */
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Newsreader', Georgia, serif;
+  --font-utility: 'Archivo', system-ui, sans-serif;
+}
+
+/* ---- Reset-ish ---- */
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; }
+
+html { scroll-behavior: smooth; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  font-family: var(--font-body);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem); /* 18px mobile → 22px desktop */
+  line-height: 1.65;
+  color: var(--ink);
+  background-color: var(--ground);
+  transition: background-color 0.15s linear, color 0.15s linear;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+/* ---- No-JS / per-act static fallback grounds ---- */
+body:not(.js) section[data-act='2'] { background: #e3cba2; color: #2b2118; }
+body:not(.js) section[data-act='3'] { background: var(--dusk); color: #e9ddcc; }
+body:not(.js) section[data-act='4'] { background: var(--shadow); color: #e9ddcc; }
+
+/* ---------------------------------------------------------------------------
+   Layout primitives
+--------------------------------------------------------------------------- */
+.section {
+  position: relative;
+  padding: clamp(5rem, 14vh, 9rem) 1.25rem;
+}
+.section--full {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.prose {
+  max-width: 65ch;
+  margin-inline: auto;
+}
+.prose p + p { margin-top: 1.4em; }
+
+.panel {
+  background: var(--panel);
+  backdrop-filter: blur(2px);
+  border-radius: 4px;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  box-shadow: var(--shadow-len) calc(var(--shadow-len) * 2) calc(var(--shadow-len) * 6)
+    rgba(23, 19, 16, 0.28);
+}
+
+/* ---- Utility text ---- */
+.kicker {
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--flamboyant);
+  margin-bottom: 1.25rem;
+}
+
+.chapter-heading {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'WONK' 1;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Section 0 — Title
+--------------------------------------------------------------------------- */
+.hero { overflow: hidden; }
+.hero__media,
+.hero__media img,
+.figure--bleed img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero__media::after {
+  /* warm vignette that deepens as daylight falls */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(23, 19, 16, calc(0.55 - var(--daylight) * 0.25)) 100%),
+    linear-gradient(rgba(23, 19, 16, calc(0.5 - var(--daylight) * 0.35)), rgba(23, 19, 16, calc(0.6 - var(--daylight) * 0.3)));
+}
+.hero__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.25rem;
+}
+.hero__title {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'WONK' 1;
+  font-weight: 600;
+  font-size: clamp(2.8rem, 11vw, 7rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  color: var(--page);
+  text-wrap: balance;
+  text-shadow: 0 2px 40px rgba(23, 19, 16, 0.45);
+}
+.hero__byline {
+  font-family: var(--font-utility);
+  font-size: 0.8rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--sunlight);
+  margin-top: 1.5rem;
+}
+.hero__cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-family: var(--font-utility);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--page);
+  opacity: 0.85;
+  animation: cue-pulse 2.4s ease-in-out 1;
+}
+@keyframes cue-pulse {
+  0%, 100% { opacity: 0.85; transform: translate(-50%, 0); }
+  50% { opacity: 0.4; transform: translate(-50%, 0.5rem); }
+}
+
+/* ---------------------------------------------------------------------------
+   Section 1 — Hook line
+--------------------------------------------------------------------------- */
+.hook {
+  text-align: center;
+}
+.hook__media img { filter: blur(14px) saturate(1.05); transform: scale(1.06); }
+.hook__line {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body);
+  font-size: clamp(1.5rem, 4.2vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.35;
+  max-width: 22ch;
+  margin-inline: auto;
+  color: var(--page);
+  text-shadow: 0 1px 24px rgba(23, 19, 16, 0.6);
+  padding: 1.25rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Dialogue
+--------------------------------------------------------------------------- */
+.dialogue { margin-top: 2rem; }
+.dialogue p {
+  margin-top: 1.1em;
+  padding-left: 1.25rem;
+  border-left: 2px solid color-mix(in oklab, var(--flamboyant) 55%, transparent);
+}
+
+/* Section 3 — the exchange, given space */
+.exchange {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+.exchange__media img { filter: saturate(1.02); }
+.exchange__lines { position: relative; z-index: 1; padding: 1.25rem; }
+.exchange__lines p {
+  font-family: var(--font-body);
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  font-weight: 500;
+  color: var(--page);
+  text-shadow: 0 1px 28px rgba(23, 19, 16, 0.7);
+}
+.exchange__lines p + p { margin-top: 1.6em; font-style: italic; }
+
+/* ---------------------------------------------------------------------------
+   Section 5 — Act break
+--------------------------------------------------------------------------- */
+.act-break__card {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: var(--page);
+  padding: 1.25rem;
+}
+.act-break__number {
+  font-family: var(--font-utility);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: var(--sunlight);
+}
+.act-break__title {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'WONK' 1;
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  font-weight: 600;
+  margin-top: 0.75rem;
+  text-shadow: 0 2px 32px rgba(23, 19, 16, 0.6);
+}
+
+/* ---------------------------------------------------------------------------
+   Section 6 — horizontal montage
+--------------------------------------------------------------------------- */
+.montage { overflow: hidden; }
+.montage__track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  padding: 0 1.25rem;
+  will-change: transform;
+}
+.montage__track figure {
+  width: min(78vw, 34rem);
+  flex-shrink: 0;
+}
+.montage__track img {
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------------------
+   Section 7 — Pull quote
+--------------------------------------------------------------------------- */
+.pull-quote {
+  text-align: center;
+}
+.pull-quote blockquote {
+  position: relative;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: clamp(1.7rem, 5vw, 3.2rem);
+  line-height: 1.3;
+  max-width: 24ch;
+  margin-inline: auto;
+}
+.pull-quote blockquote::before {
+  content: '“';
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.2em;
+  line-height: 0.6;
+  color: var(--flamboyant);
+}
+
+/* ---------------------------------------------------------------------------
+   Inline figures
+--------------------------------------------------------------------------- */
+.figure {
+  max-width: 34rem;
+  margin: 3rem auto 0;
+}
+.figure img {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: var(--shadow-len) calc(var(--shadow-len) * 2.5) calc(var(--shadow-len) * 8)
+    rgba(23, 19, 16, 0.35);
+}
+.crossfade { position: relative; }
+.crossfade img + img { position: absolute; inset: 0; opacity: 0; }
+
+/* ---------------------------------------------------------------------------
+   Section 10 — the fracture
+--------------------------------------------------------------------------- */
+.fracture { overflow: hidden; }
+.fracture__media img { filter: saturate(0.75) contrast(1.08); }
+.fracture__content {
+  position: relative;
+  z-index: 1;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: 1.25rem;
+  color: var(--page);
+  text-align: center;
+}
+.fracture__intro {
+  font-size: clamp(1.25rem, 3vw, 1.7rem);
+  font-style: italic;
+}
+.fracture__content .dialogue p {
+  border-color: color-mix(in oklab, var(--flamboyant) 40%, transparent);
+  text-align: left;
+  font-size: clamp(1.2rem, 2.6vw, 1.5rem);
+  text-shadow: 0 1px 20px rgba(23, 19, 16, 0.8);
+}
+.fracture__dim {
+  /* darkens with each dialogue beat via --fracture-dim (0 → 1) */
+  position: absolute;
+  inset: 0;
+  background: var(--shadow);
+  opacity: calc(var(--fracture-dim, 0) * 0.72);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Section 11 — the last line
+--------------------------------------------------------------------------- */
+.last-line {
+  background: var(--shadow);
+  color: var(--page);
+  text-align: center;
+  min-height: 160svh; /* extra dark scroll after the line — let it land */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 38svh;
+}
+.last-line__lead {
+  font-size: clamp(1.3rem, 3.4vw, 2rem);
+  opacity: 0.75;
+}
+.last-line__final {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 5.4vw, 3.4rem);
+  margin-top: 1.6em;
+  max-width: 18ch;
+  /* the spotlight */
+  text-shadow: 0 0 60px rgba(232, 163, 61, 0.35);
+}
+
+/* ---------------------------------------------------------------------------
+   Section 12 — Conversion (§6)
+--------------------------------------------------------------------------- */
+.cta {
+  background: var(--shadow);
+  color: var(--page);
+  text-align: center;
+  padding: clamp(5rem, 14vh, 9rem) 1.25rem;
+}
+.cta__inner { max-width: 42rem; margin-inline: auto; }
+.cta__cover {
+  width: min(58vw, 15rem);
+  margin: 0 auto 2.5rem;
+  border-radius: 3px;
+  box-shadow:
+    0 0 90px rgba(232, 163, 61, 0.28),
+    0 24px 60px rgba(0, 0, 0, 0.6);
+  transform: rotate(-2deg);
+}
+.cta__eyebrow {
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  color: var(--sunlight);
+}
+.cta__headline {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'WONK' 1;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.08;
+  margin-top: 1rem;
+  text-wrap: balance;
+}
+.cta__subhead {
+  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  margin: 1.5rem auto 0;
+  max-width: 46ch;
+  opacity: 0.9;
+}
+.cta__button {
+  display: inline-block;
+  margin-top: 2.5rem;
+  background: var(--sunlight);
+  color: var(--shadow);
+  font-family: var(--font-utility);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 1.1rem 2.4rem;
+  border-radius: 3px;
+  box-shadow: 0 0 40px rgba(232, 163, 61, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.cta__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(232, 163, 61, 0.5);
+}
+.cta__retailers {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.4rem;
+  margin-top: 1.5rem;
+  font-family: var(--font-utility);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.cta__retailers a { color: var(--page); opacity: 0.7; text-decoration: none; }
+.cta__retailers a:hover { opacity: 1; }
+.cta__risk { margin-top: 2rem; font-size: 1rem; opacity: 0.65; font-style: italic; }
+
+.testimonials { margin-top: 3rem; }
+.testimonials blockquote { font-style: italic; opacity: 0.85; }
+.testimonials cite {
+  display: block;
+  margin-top: 0.5rem;
+  font-family: var(--font-utility);
+  font-style: normal;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* Email capture */
+.capture { margin-top: 4rem; border-top: 1px solid rgba(245, 235, 220, 0.15); padding-top: 3rem; }
+.capture h3 { font-family: var(--font-body); font-weight: 500; font-size: 1.25rem; }
+.capture form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+.capture input[type='email'] {
+  font-family: var(--font-utility);
+  font-size: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid rgba(245, 235, 220, 0.3);
+  border-radius: 3px;
+  background: rgba(245, 235, 220, 0.06);
+  color: var(--page);
+  min-width: min(20rem, 80vw);
+}
+.capture button {
+  font-family: var(--font-utility);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.6rem;
+  border: 1px solid var(--sunlight);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--sunlight);
+  cursor: pointer;
+}
+.capture button:hover { background: var(--sunlight); color: var(--shadow); }
+.capture__msg { margin-top: 1rem; font-size: 0.95rem; min-height: 1.4em; }
+
+/* ---------------------------------------------------------------------------
+   Section 13 — Footer
+--------------------------------------------------------------------------- */
+.footer {
+  background: var(--shadow);
+  color: var(--page);
+  padding: 4rem 1.25rem 3rem;
+  border-top: 1px solid rgba(245, 235, 220, 0.1);
+  text-align: center;
+  font-size: 1rem;
+}
+.footer__bio { max-width: 55ch; margin-inline: auto; opacity: 0.8; }
+.footer__links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  font-family: var(--font-utility);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.footer__links a { color: var(--sunlight); text-decoration: none; }
+.footer__imprint { margin-top: 2.5rem; font-size: 0.8rem; opacity: 0.45; }
+
+/* ---------------------------------------------------------------------------
+   Persistent UI
+--------------------------------------------------------------------------- */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: var(--flamboyant);
+  z-index: 60;
+}
+
+.sticky-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 50;
+  font-family: var(--font-utility);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--shadow);
+  background: var(--sunlight);
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(23, 19, 16, 0.4);
+  opacity: 0;
+  transform: translateY(0.75rem);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.sticky-cta.visible { opacity: 1; transform: none; pointer-events: auto; }
+
+/* Exit-intent panel (desktop only, once per session, offers Chapter 4 — never the purchase) */
+.exit-intent {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 70;
+  background: var(--dusk);
+  color: var(--page);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  transform: translateY(100%);
+  transition: transform 0.35s ease;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+}
+.exit-intent.visible { transform: none; }
+.exit-intent p { font-size: 1.05rem; }
+.exit-intent a { color: var(--sunlight); }
+.exit-intent button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  background: none;
+  border: 0;
+  color: var(--page);
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+/* ---------------------------------------------------------------------------
+   Manuscript stand-in marker — visible until real prose is pasted in.
+   Remove `todo: true` in src/content/story.js and the marker disappears.
+--------------------------------------------------------------------------- */
+[data-manuscript-todo] { position: relative; }
+[data-manuscript-todo]::after {
+  content: 'stand-in — replace with manuscript text';
+  display: block;
+  font-family: var(--font-utility);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--flamboyant);
+  opacity: 0.75;
+  margin-top: 0.4em;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll reveal defaults (JS adds .reveal; reduced-motion path uses these too)
+--------------------------------------------------------------------------- */
+.will-reveal {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.will-reveal.revealed { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .will-reveal { transform: none; transition: opacity 0.4s ease; }
+  .hero__cue { animation: none; }
+  .cta__button, .cta__button:hover { transition: none; transform: none; }
+}

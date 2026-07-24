@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs>
+ <radialGradient id="g" cx="50%" cy="38%" r="85%">
+  <stop offset="0%" stop-color="#efc684"/><stop offset="55%" stop-color="#c98045"/><stop offset="100%" stop-color="#5f4020"/>
+ </radialGradient>
+ <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope="0.06"/></feComponentTransfer><feComposite operator="in" in2="SourceGraphic"/></filter>
+</defs>
+<rect width="1600" height="900" fill="url(#g)"/>
+<rect width="1600" height="900" filter="url(#n)" fill="#5f4020"/>
+<text x="800" y="876" text-anchor="middle" font-family="monospace" font-size="14" fill="#59391a" opacity="0.6">shot 05 · placeholder</text>
+</svg>
