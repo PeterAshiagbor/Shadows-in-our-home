@@ -278,17 +278,22 @@ const bookSchema = {
           <li class="sr-only">{story.conversion.remaining.hiddenNote}</li>
         </ol>
 
-        <a
-          class="cta__button"
-          id="buy-cta"
-          href={config.universalBookLink}
-          data-event="cta_click_buy"
-        >{story.conversion.ctaLabel} — {config.price}</a>
-        <nav class="cta__retailers" aria-label="Buy from a specific store">
-          {config.retailers.map((r) => (
-            <a href={r.href} data-event="cta_click_buy">{r.name}</a>
-          ))}
-        </nav>
+        {config.prelaunch ? (
+          <a class="cta__button" id="buy-cta" href="#capture" data-event="cta_click_prelaunch">
+            {story.conversion.prelaunchCtaLabel}
+          </a>
+        ) : (
+          <>
+            <a class="cta__button" id="buy-cta" href={config.universalBookLink} data-event="cta_click_buy">
+              {story.conversion.ctaLabel}{config.price ? ` — ${config.price}` : ''}
+            </a>
+            <nav class="cta__retailers" aria-label="Buy from a specific store">
+              {config.retailers.map((r) => (
+                <a href={r.href} data-event="cta_click_buy">{r.name}</a>
+              ))}
+            </nav>
+          </>
+        )}
         <p class="cta__risk">{story.conversion.riskReducer}</p>
 
         {config.testimonials.length > 0 && (
@@ -303,7 +308,7 @@ const bookSchema = {
         )}
 
         <div class="capture" id="capture">
-          <h3>{story.conversion.emailHeading}</h3>
+          <h3>{config.prelaunch ? story.conversion.prelaunchEmailHeading : story.conversion.emailHeading}</h3>
           <form id="capture-form" method="post" action={config.emailEndpoint || '#'}>
             <label class="sr-only" for="capture-email">Email address</label>
             <input id="capture-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />

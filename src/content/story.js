@@ -201,8 +201,11 @@ export const story = {
     subhead:
       'Seven more chapters. A marriage tested by distance, temptation, and a loss no family should survive. Keziah kept watching — find out what she saw.',
     ctaLabel: 'Get the full book',
+    // Pre-publication variants (used while config.prelaunch is true)
+    prelaunchCtaLabel: 'Get Chapter 4 free — be first to the rest',
     riskReducer: 'Read Chapters 1–3 free above. The rest is waiting.',
     emailHeading: 'Not ready? Get Chapter 4 free by email.',
+    prelaunchEmailHeading: 'The book is coming. Get Chapter 4 free by email — and be first to know when the rest arrives.',
     emailButton: 'Send me Chapter 4',
     // What remains — real chapter titles from the manuscript's table of
     // contents, sinking into shadow. Titles from Chapter Seven onward are
