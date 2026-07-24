@@ -202,22 +202,32 @@ export const story = {
   conversion: {
     eyebrow: 'THE STORY DOESN’T END HERE',
     headline: 'You’ve read the light. The shadows are next.',
+    // The page shows glimpses, not full chapters — the copy says so honestly.
     subhead:
-      'Seven more chapters. A marriage tested by distance, temptation, and a loss no family should survive. Keziah kept watching — find out what she saw.',
+      'What you just read are glimpses. The full story — ten chapters of a marriage tested by distance, temptation, and a loss no family should survive — is coming. Keziah kept watching. Find out what she saw.',
     ctaLabel: 'Get the full book',
     // Pre-publication variants (used while config.prelaunch is true)
     prelaunchCtaLabel: 'Get Chapter 4 free — be first to the rest',
-    riskReducer: 'Read Chapters 1–3 free above. The rest is waiting.',
+    riskReducer: 'Everything above is only a taste of the first three chapters. The book goes deeper.',
     emailHeading: 'Not ready? Get Chapter 4 free by email.',
     prelaunchEmailHeading: 'The book is coming. Get Chapter 4 free by email — and be first to know when the rest arrives.',
     emailButton: 'Send me Chapter 4',
+    // The release modal — opens when the primary CTA is clicked (prelaunch)
+    modal: {
+      title: 'The shadows arrive this September.',
+      body: 'The full book releases in September. Leave your email and Chapter 4 comes to you free — and you’ll be the first to know the moment the rest is out.',
+      success: 'Chapter 4 is on its way. See you in September.',
+    },
     // What remains — real chapter titles from the manuscript's table of
     // contents, sinking into shadow. Titles from Chapter Seven onward are
     // withheld entirely (rendered as smudges, no text in the DOM) so nothing
     // from the back half can be spoiled, searched, or view-sourced.
     remaining: {
-      label: 'What remains',
+      label: 'Inside the book',
       visible: [
+        { num: 'I', title: 'The First Spark', read: true },
+        { num: 'II', title: 'Love Blossoms', read: true },
+        { num: 'III', title: 'The Shape of What We Become', read: true },
         { num: 'IV', title: 'The First Crack' },
         { num: 'V', title: 'His Version of Present' },
         { num: 'VI', title: 'Father on Paper' },

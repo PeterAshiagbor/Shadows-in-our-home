@@ -37,9 +37,9 @@ const rgb = ([r, g, b]) => `rgb(${r},${g},${b})`;
 // narrow band (0.60 → 0.47) so text never lingers on a mid-contrast ground.
 const STOPS = [
   { d: 1.0,  ground: '#f0dfc4', ink: '#2b2118', inkSoft: '#5c4a38', panel: [245, 235, 220, 0.88], glow: '#e8a33d' },
-  { d: 0.6,  ground: '#dfc094', ink: '#2b2118', inkSoft: '#54432f', panel: [245, 235, 220, 0.82], glow: '#e8a33d' },
-  { d: 0.47, ground: '#4a3a2d', ink: '#ede2d0', inkSoft: '#c9b79f', panel: [42, 33, 26, 0.82],   glow: '#c98f3a' },
-  { d: 0.3,  ground: '#3e3128', ink: '#ede2d0', inkSoft: '#c2b096', panel: [36, 29, 23, 0.84],   glow: '#b27f33' },
+  { d: 0.6,  ground: '#d8b483', ink: '#2b2118', inkSoft: '#4e3d29', panel: [245, 235, 220, 0.84], glow: '#e8a33d' },
+  { d: 0.5,  ground: '#4a3a2d', ink: '#ede2d0', inkSoft: '#cdbca4', panel: [42, 33, 26, 0.84],   glow: '#c98f3a' },
+  { d: 0.3,  ground: '#3e3128', ink: '#ede2d0', inkSoft: '#c2b096', panel: [36, 29, 23, 0.85],   glow: '#b27f33' },
   { d: 0.0,  ground: '#171310', ink: '#ede2d0', inkSoft: '#b9a88f', panel: [30, 24, 19, 0.86],   glow: '#8f6528' },
 ];
 
@@ -64,18 +64,23 @@ function applyDaylight(d) {
 
 // Daylight anchors: [section id, daylight at that section's centre].
 // Tune this curve by eye once real imagery is in (build order step 5).
+// No text may REST inside the ink/panel flip band (0.6 → 0.5): the flip is
+// pinned to happen across s8's wedding figure — after the Chapter Three
+// panel (still warm paper) and before the vows, which sit fully in dusk.
 const ANCHORS = [
-  ['s0', 1.0], ['s4', 0.92], ['s5', 0.82], ['s7', 0.65],
-  ['s8', 0.55], ['s9', 0.42], ['s10', 0.16], ['s11', 0.03], ['s12', 0.0],
+  ['#s0', 1.0], ['#s4', 0.92], ['#s5', 0.82], ['#s7', 0.68],
+  ['#s8 .panel', 0.63], ['#s8 .vows', 0.42], ['#s9', 0.4],
+  ['#s10', 0.16], ['#s11', 0.03], ['#s12', 0.0],
 ];
 
 function daylightFromScroll() {
   const mid = window.scrollY + window.innerHeight * 0.5;
   const pts = ANCHORS
-    .map(([id, d]) => {
-      const el = document.getElementById(id);
+    .map(([sel, d]) => {
+      const el = document.querySelector(sel);
       if (!el) return null;
-      return { y: el.offsetTop + el.offsetHeight * 0.5, d };
+      const r = el.getBoundingClientRect();
+      return { y: r.top + window.scrollY + r.height * 0.5, d };
     })
     .filter(Boolean);
   if (mid <= pts[0].y) return pts[0].d;
@@ -550,31 +555,51 @@ document.querySelectorAll('[data-sealed]').forEach((row) => {
 /* ------------------------------------------------------------------------- */
 /* Email capture (§6)                                                         */
 /* ------------------------------------------------------------------------- */
-const form = document.getElementById('capture-form');
-if (form) {
+document.querySelectorAll('.capture-form').forEach((form) => {
+  const msg = form.parentElement.querySelector('.capture__msg');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const msg = document.getElementById('capture-msg');
     const endpoint = form.getAttribute('action');
     const email = form.querySelector('input[type="email"]').value;
     if (!endpoint || endpoint === '#') {
-      // OPEN ITEM §9.3: wire config.emailEndpoint to the email provider.
       msg.textContent = 'Email signup is almost ready — check back soon.';
       return;
     }
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
     try {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: form.dataset.source || 'site' }),
       });
       if (!res.ok) throw new Error(String(res.status));
       track('email_submit', false);
-      msg.textContent = 'Chapter 4 is on its way. Check your inbox.';
+      msg.textContent = msg.dataset.success || 'Chapter 4 is on its way. Check your inbox.';
       form.reset();
     } catch {
       msg.textContent = 'Something went wrong — please try again.';
+    } finally {
+      btn.disabled = false;
     }
+  });
+});
+
+/* ------------------------------------------------------------------------- */
+/* Release modal — the primary CTA opens the September announcement           */
+/* ------------------------------------------------------------------------- */
+const releaseModal = document.getElementById('release-modal');
+const buyCta = document.getElementById('buy-cta');
+if (releaseModal && buyCta && buyCta.getAttribute('href') === '#capture') {
+  buyCta.addEventListener('click', (e) => {
+    e.preventDefault();
+    releaseModal.showModal();
+    track('release_modal_open', false);
+  });
+  document.getElementById('release-close')?.addEventListener('click', () => releaseModal.close());
+  releaseModal.addEventListener('click', (e) => {
+    // click on the backdrop (outside the panel) closes
+    if (e.target === releaseModal) releaseModal.close();
   });
 }
 

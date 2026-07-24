@@ -425,7 +425,7 @@ body:not(.js) .whisper { --whisper: 1; }
   margin-top: 2.2rem;
   font-size: clamp(1rem, 2.2vw, 1.2rem);
   line-height: 1.7;
-  color: var(--ink-soft);
+  color: var(--ink);
   opacity: var(--vows-shadow, 0);
   transform: translateY(calc((1 - var(--vows-shadow, 0)) * 0.6rem));
 }
@@ -638,7 +638,7 @@ body:not(.js) .last-line__bridge { opacity: 0.9; }
   padding: 0.6rem 0.4rem;
   border-bottom: 1px solid rgba(245, 235, 220, 0.08);
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.78;
 }
 .file__row:focus-visible { outline: 1px solid var(--sunlight); outline-offset: 2px; }
 .file__num {
@@ -787,6 +787,15 @@ body:not(.js) .last-line__bridge { opacity: 0.9; }
   color: var(--sunlight);
   opacity: 0.8;
   min-width: 2.2em;
+}
+.remaining__item--read { opacity: 1; }
+.remaining__item--read::after {
+  content: 'read';
+  margin-left: auto;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: var(--sunlight);
+  opacity: 0.6;
 }
 .remaining__item--fade0 { opacity: 0.9; }
 .remaining__item--fade1 { opacity: 0.7; filter: blur(0.3px); }
@@ -954,6 +963,81 @@ body:not(.js) .last-line__bridge { opacity: 0.9; }
   cursor: pointer;
   opacity: 0.7;
 }
+
+/* ---------------------------------------------------------------------------
+   Release modal — the September announcement (opens from the primary CTA)
+--------------------------------------------------------------------------- */
+.release-modal {
+  margin: auto;
+  max-width: min(26rem, calc(100vw - 2.5rem));
+  background: #1d1712;
+  color: var(--page);
+  border: 1px solid rgba(232, 163, 61, 0.4);
+  border-radius: 6px;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  box-shadow: 0 0 80px rgba(232, 163, 61, 0.18), 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+.release-modal::backdrop {
+  background: rgba(13, 10, 8, 0.75);
+  backdrop-filter: blur(4px);
+}
+.release-modal__title {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 144, 'WONK' 1;
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-top: 0.9rem;
+  text-wrap: balance;
+}
+.release-modal__body {
+  margin-top: 1rem;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+.release-modal .capture-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.release-modal input[type='email'] {
+  font-family: var(--font-utility);
+  font-size: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid rgba(245, 235, 220, 0.3);
+  border-radius: 3px;
+  background: rgba(245, 235, 220, 0.06);
+  color: var(--page);
+}
+.release-modal button[type='submit'] {
+  font-family: var(--font-utility);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.95rem 1.6rem;
+  border: 0;
+  border-radius: 3px;
+  background: var(--sunlight);
+  color: var(--shadow);
+  cursor: pointer;
+}
+.release-modal__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.85rem;
+  background: none;
+  border: 0;
+  color: var(--page);
+  font-size: 1.4rem;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.release-modal__close:hover { opacity: 1; }
+.release-modal .capture__msg { margin-top: 0.9rem; }
 
 /* ---------------------------------------------------------------------------
    Manuscript stand-in marker — visible until real prose is pasted in.

@@ -24,10 +24,16 @@ const bookSchema = {
     <title>{config.title}</title>
     <meta name="description" content={config.description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={Astro.site} />
     <meta property="og:title" content="Shadows in Our Home" />
     <meta property="og:description" content={config.description} />
     <meta property="og:type" content="book" />
-    <meta property="og:image" content="/assets/og-cover.jpg" />
+    <meta property="og:url" content={Astro.site} />
+    <meta property="og:image" content={new URL('/assets/og-cover.jpg', Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={new URL('/assets/og-cover.jpg', Astro.site)} />
     <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin />
     <script type="application/ld+json" set:html={JSON.stringify(bookSchema)} />
@@ -263,10 +269,10 @@ const bookSchema = {
         <h2 class="cta__headline">{story.conversion.headline}</h2>
         <p class="cta__subhead">{story.conversion.subhead}</p>
 
-        <ol class="remaining" aria-label="The chapters that remain">
+        <ol class="remaining" aria-label="The chapters inside the book">
           <li class="remaining__label">{story.conversion.remaining.label}</li>
           {story.conversion.remaining.visible.map((c, i) => (
-            <li class={`remaining__item remaining__item--fade${i}`}>
+            <li class={`remaining__item ${c.read ? 'remaining__item--read' : `remaining__item--fade${Math.max(0, i - 3)}`}`}>
               <span class="remaining__num">{c.num}</span> {c.title}
             </li>
           ))}
@@ -309,12 +315,12 @@ const bookSchema = {
 
         <div class="capture" id="capture">
           <h3>{config.prelaunch ? story.conversion.prelaunchEmailHeading : story.conversion.emailHeading}</h3>
-          <form id="capture-form" method="post" action={config.emailEndpoint || '#'}>
+          <form class="capture-form" method="post" action={config.emailEndpoint || '#'} data-source="chapter4-form">
             <label class="sr-only" for="capture-email">Email address</label>
             <input id="capture-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
             <button type="submit">{story.conversion.emailButton}</button>
           </form>
-          <p class="capture__msg" id="capture-msg" role="status"></p>
+          <p class="capture__msg" role="status"></p>
         </div>
       </div>
     </section>
@@ -342,6 +348,20 @@ const bookSchema = {
       <button type="button" id="exit-close" aria-label="Close">×</button>
       <p>Before you go — <a href="#capture">get Chapter 4 free by email</a>. No spoilers, no spam.</p>
     </div>
+
+    <!-- Release modal — opens from the primary CTA while in prelaunch -->
+    <dialog class="release-modal" id="release-modal" aria-labelledby="release-modal-title">
+      <button type="button" class="release-modal__close" id="release-close" aria-label="Close">×</button>
+      <p class="cta__eyebrow">{story.conversion.eyebrow}</p>
+      <h3 class="release-modal__title" id="release-modal-title">{story.conversion.modal.title}</h3>
+      <p class="release-modal__body">{story.conversion.modal.body}</p>
+      <form class="capture-form release-modal__form" method="post" action={config.emailEndpoint || '#'} data-source="release-modal">
+        <label class="sr-only" for="modal-email">Email address</label>
+        <input id="modal-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+        <button type="submit">{story.conversion.emailButton}</button>
+      </form>
+      <p class="capture__msg" role="status" data-success={story.conversion.modal.success}></p>
+    </dialog>
 
     <script src="../scripts/main.js"></script>
   </body>

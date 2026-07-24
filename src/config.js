@@ -28,9 +28,9 @@ export const config = {
     { name: 'Selar', href: '#selar-pending' },
   ],
 
-  // §9.3 — Email capture endpoint (form service or serverless function URL).
-  // Leave empty to show the form in "not yet wired" mode.
-  emailEndpoint: '',
+  // §9.3 — Email capture endpoint. An n8n webhook that appends each signup
+  // to the "Shadows in Our Home — Signups" Google Sheet in Peter's Drive.
+  emailEndpoint: 'https://kickstartglobal.app.n8n.cloud/webhook/shadows-signup',
 
   // §9.6 — Reader quotes. Leave empty and the block is omitted entirely — no fake reviews.
   testimonials: [
