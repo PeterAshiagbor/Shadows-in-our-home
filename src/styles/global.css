@@ -80,7 +80,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img { max-width: 100%; display: block; }
+/* height:auto keeps the width/height HTML attributes (kept for CLS) from
+   distorting images whose width is constrained in CSS */
+img { max-width: 100%; height: auto; display: block; }
 
 /* ---- No-JS / per-act static fallback grounds ---- */
 body:not(.js) section[data-act='2'] { background: #e3cba2; color: #2b2118; }
