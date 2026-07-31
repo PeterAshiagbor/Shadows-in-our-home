@@ -824,6 +824,16 @@ body:not(.js) .last-line__bridge { opacity: 0.9; }
   border: 0;
 }
 
+/* Honeypot — hidden from humans (kept out of the a11y tree via aria-hidden in
+   markup), harvested by spam bots. A filled value marks the submit as a bot. */
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .testimonials { margin-top: 3rem; }
 .testimonials blockquote { font-style: italic; opacity: 0.85; }
 .testimonials cite {

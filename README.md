@@ -14,6 +14,25 @@ near-darkness, and the book becomes the light source at the CTA.
 - Self-hosted Google Fonts: Fraunces (display), Newsreader (prose), Archivo (utility)
 - Gemini image generation at **build time only** (`scripts/generate-images.mjs`)
 
+## Security & headers
+
+Delivered via `vercel.json`:
+
+- **CSP**: `script-src 'self'` (no inline executable scripts — the JS flag is set
+  from the bundle, not an inline tag), `style-src 'self' 'unsafe-inline'` (Lenis
+  injects a runtime `<style>`), `connect-src`/`form-action` limited to self + the
+  signup webhook, `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'self'`.
+- `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`,
+  `Permissions-Policy` (camera/mic/geo/topics off), `Cross-Origin-Opener-Policy`.
+- Long-lived immutable caching for `/fonts` and `/assets`.
+
+**Signup abuse controls:** a hidden honeypot field (`company`) on both forms —
+filled → the client shows success but never calls the endpoint, and the n8n
+workflow independently routes honeypot-filled payloads to a 400. The webhook
+also dedupes on email and sanitises against spreadsheet formula injection.
+Note: a static site can't rate-limit direct POSTs to the public webhook; if
+abuse appears, move the endpoint behind a serverless function or Turnstile.
+
 ## Commands
 
 ```sh

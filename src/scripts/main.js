@@ -9,6 +9,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 
+// Flag JS as early as this module runs so the no-JS fallback styles drop.
+// (Kept out of an inline <script> so the CSP can use a strict script-src.)
+document.body.classList.add('js');
+
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ------------------------------------------------------------------------- */
@@ -564,6 +568,13 @@ document.querySelectorAll('.capture-form').forEach((form) => {
     e.preventDefault();
     const endpoint = form.getAttribute('action');
     const email = form.querySelector('input[type="email"]').value;
+    // Honeypot: a real person never fills the hidden field. If it's set, show
+    // the normal success (so bots don't learn) but never hit the endpoint.
+    if (form.querySelector('input[name="company"]')?.value) {
+      msg.textContent = msg.dataset.success || 'Chapter 4 is on its way. Check your inbox.';
+      form.reset();
+      return;
+    }
     if (!endpoint || endpoint === '#') {
       msg.textContent = 'Email signup is almost ready — check back soon.';
       return;

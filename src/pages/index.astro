@@ -48,6 +48,8 @@ const jsonLd = [
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#171310" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href={siteUrl} />
 
     <meta property="og:site_name" content="Shadows in Our Home" />
@@ -73,8 +75,6 @@ const jsonLd = [
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
-    <script>document.body.classList.add('js');</script>
-
     <div class="progress" id="progress" aria-hidden="true"></div>
 
     <!-- 0 · Title -->
@@ -168,7 +168,7 @@ const jsonLd = [
           </div>
         )}
       </div>
-      <div class="montage" data-montage>
+      <div class="montage" data-montage role="group" aria-label="Scenes from their courtship">
         <div class="montage__track">
           <figure><Shot shot={shot(5)} /></figure>
           <figure><Shot shot={shot(6)} /></figure>
@@ -324,12 +324,12 @@ const jsonLd = [
           </a>
         ) : (
           <>
-            <a class="cta__button" id="buy-cta" href={config.universalBookLink} data-event="cta_click_buy">
+            <a class="cta__button" id="buy-cta" href={config.universalBookLink} target="_blank" rel="noopener noreferrer" data-event="cta_click_buy">
               {story.conversion.ctaLabel}{config.price ? ` — ${config.price}` : ''}
             </a>
             <nav class="cta__retailers" aria-label="Buy from a specific store">
               {config.retailers.map((r) => (
-                <a href={r.href} data-event="cta_click_buy">{r.name}</a>
+                <a href={r.href} target="_blank" rel="noopener noreferrer" data-event="cta_click_buy">{r.name}</a>
               ))}
             </nav>
           </>
@@ -352,6 +352,10 @@ const jsonLd = [
           <form class="capture-form" method="post" action={config.emailEndpoint || '#'} data-source="chapter4-form">
             <label class="sr-only" for="capture-email">Email address</label>
             <input id="capture-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+            <div class="hp" aria-hidden="true">
+              <label for="capture-company">Company (leave blank)</label>
+              <input id="capture-company" type="text" name="company" tabindex="-1" autocomplete="off" />
+            </div>
             <button type="submit">{story.conversion.emailButton}</button>
           </form>
           <p class="capture__msg" role="status"></p>
@@ -375,7 +379,9 @@ const jsonLd = [
     </footer>
 
     <!-- Persistent UI -->
-    <a class="sticky-cta" id="sticky-cta" href="#s12" data-event="cta_click_sticky">Get the book</a>
+    <a class="sticky-cta" id="sticky-cta" href="#s12" data-event="cta_click_sticky">
+      {config.prelaunch ? 'Get Chapter 4 free' : 'Get the book'}
+    </a>
     <button type="button" class="autoplay-ctl" id="autoplay-ctl" hidden>❚❚&nbsp;&nbsp;Pause</button>
 
     <div class="exit-intent" id="exit-intent" role="dialog" aria-label="Free chapter offer" aria-hidden="true">
@@ -391,7 +397,12 @@ const jsonLd = [
       <p class="release-modal__body">{story.conversion.modal.body}</p>
       <form class="capture-form release-modal__form" method="post" action={config.emailEndpoint || '#'} data-source="release-modal">
         <label class="sr-only" for="modal-email">Email address</label>
-        <input id="modal-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" />
+        <input id="modal-email" type="email" name="email" required placeholder="your@email.com" autocomplete="email" autofocus />
+        <input type="hidden" name="release" value="September 2026" />
+        <div class="hp" aria-hidden="true">
+          <label for="modal-company">Company (leave blank)</label>
+          <input id="modal-company" type="text" name="company" tabindex="-1" autocomplete="off" />
+        </div>
         <button type="submit">{story.conversion.emailButton}</button>
       </form>
       <p class="capture__msg" role="status" data-success={story.conversion.modal.success}></p>
